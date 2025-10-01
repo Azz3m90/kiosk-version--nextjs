@@ -40,7 +40,7 @@ export function MenuItem({ item }: MenuItemProps) {
 
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group flex flex-col h-full">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group flex flex-col h-full">
         {/* Item Image */}
         <div className="relative h-48 lg:h-56 overflow-hidden">
           <Image
@@ -51,8 +51,8 @@ export function MenuItem({ item }: MenuItemProps) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           {/* Category Badge */}
-          <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full">
-            <span className="text-sm font-semibold text-gray-700">
+          <div className="absolute top-4 left-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-3 py-1 rounded-full">
+            <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
               {t(item.category)}
             </span>
           </div>
@@ -67,16 +67,16 @@ export function MenuItem({ item }: MenuItemProps) {
 
         {/* Item Details */}
         <div className="p-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-1">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 line-clamp-1">
             {item.name}
           </h3>
-          <p className="text-gray-600 text-sm mb-4 line-clamp-2 h-10">
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2 h-10">
             {item.description}
           </p>
 
           {/* Price and Add Button */}
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold text-primary-600">
+            <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
               {formatPrice(item.price)}
             </span>
             <button
@@ -91,7 +91,7 @@ export function MenuItem({ item }: MenuItemProps) {
 
           {/* Options Indicator */}
           {item.options && item.options.length > 0 && (
-            <p className="text-xs text-gray-500 mt-3 text-center">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center">
               {t('customizable')}
             </p>
           )}

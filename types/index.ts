@@ -1,6 +1,8 @@
 // Core Types
 export type Language = 'en' | 'fr' | 'nl' | 'de' | 'es' | 'it';
 
+export type Theme = 'light' | 'dark';
+
 export type FoodCategory = 'appetizers' | 'mains' | 'desserts';
 export type DrinkCategory = 'hot' | 'cold' | 'alcoholic';
 
@@ -62,6 +64,7 @@ export interface CartItem {
   quantity: number;
   image: string;
   selectedOptions?: SelectedOption[];
+  specialInstructions?: string;
   type: 'food' | 'drink';
 }
 

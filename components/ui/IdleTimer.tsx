@@ -112,6 +112,28 @@ export function IdleTimer({
     };
   }, [handleUserActivity, resetIdleTimer, clearAllTimers]);
 
+  // Lock body scroll when warning is shown
+  useEffect(() => {
+    if (showWarning) {
+      // Save original overflow style
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      
+      // Get scrollbar width to prevent layout shift
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Lock scroll and compensate for scrollbar
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+      // Cleanup: restore scroll when warning closes
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [showWarning]);
+
   if (!showWarning) return null;
 
   return (

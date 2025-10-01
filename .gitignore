@@ -2,6 +2,7 @@
 node_modules
 backup-original
 .zencoder
+.next
 /.pnp
 .pnp.js
 .yarn/install-state.gz

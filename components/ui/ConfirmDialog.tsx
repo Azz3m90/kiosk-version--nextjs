@@ -27,14 +27,23 @@ export function ConfirmDialog({
   // Prevent body scroll when dialog is open
   useEffect(() => {
     if (isOpen) {
+      // Save original overflow style
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      
+      // Get scrollbar width to prevent layout shift
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Lock scroll and compensate for scrollbar
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+      // Cleanup: restore scroll when dialog closes
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
     }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
 
   // Handle ESC key

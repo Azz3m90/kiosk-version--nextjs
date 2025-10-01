@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatPrice } from '@/lib/utils';
@@ -19,6 +19,28 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
 
   const orderSummary = getOrderSummary();
+
+  // Lock body scroll when sidebar is open
+  useEffect(() => {
+    if (isOpen) {
+      // Save original overflow style
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      
+      // Get scrollbar width to prevent layout shift
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Lock scroll and compensate for scrollbar
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+      // Cleanup: restore scroll when sidebar closes
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
+    }
+  }, [isOpen]);
 
   const handleCheckout = () => {
     navigateToStep('review');
@@ -48,7 +70,7 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
 
       {/* Sidebar - Slides from RIGHT */}
       <div
-        className={`fixed top-0 right-0 h-screen w-[420px] bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
+        className={`fixed top-0 right-0 h-screen w-[420px] bg-white dark:bg-gray-800 shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -73,8 +95,8 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
         <div className="flex-1 overflow-y-auto p-6">
           {cart.length === 0 ? (
             <div className="text-center py-16">
-              <ShoppingCart className="w-24 h-24 text-gray-300 mx-auto mb-6" />
-              <p className="text-gray-500 text-xl font-medium">{t('cart_empty')}</p>
+              <ShoppingCart className="w-24 h-24 text-gray-300 dark:text-gray-600 mx-auto mb-6" />
+              <p className="text-gray-500 dark:text-gray-400 text-xl font-medium">{t('cart_empty')}</p>
               <button
                 onClick={onClose}
                 className="mt-6 px-8 py-4 bg-primary-500 text-white rounded-xl text-lg font-semibold hover:bg-primary-600 transition-colors"
@@ -87,7 +109,7 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
               {cart.map((cartItem) => (
                 <div
                   key={cartItem.id}
-                  className="bg-gray-50 rounded-xl p-5 flex gap-4 hover:bg-gray-100 transition-colors"
+                  className="bg-gray-50 dark:bg-gray-700 rounded-xl p-5 flex gap-4 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                 >
                   {/* Item Image */}
                   <div className="relative w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
@@ -102,21 +124,26 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
 
                   {/* Item Details */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-lg text-gray-800 truncate">
+                    <h3 className="font-bold text-lg text-gray-800 dark:text-white truncate">
                       {cartItem.name}
                     </h3>
-                    <p className="text-base text-gray-600">
+                    <p className="text-base text-gray-600 dark:text-gray-300">
                       {t('quantity')}: <span className="font-semibold">{cartItem.quantity}</span>
                     </p>
                     {cartItem.selectedOptions &&
                       cartItem.selectedOptions.length > 0 && (
-                        <p className="text-sm text-gray-500 truncate">
+                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                           {cartItem.selectedOptions
                             .map((opt) => opt.optionName)
                             .join(', ')}
                         </p>
                       )}
-                    <p className="text-primary-600 font-bold text-xl mt-2">
+                    {cartItem.specialInstructions && (
+                      <p className="text-sm text-amber-600 dark:text-amber-400 italic mt-1 truncate">
+                        ✏️ {cartItem.specialInstructions}
+                      </p>
+                    )}
+                    <p className="text-primary-600 dark:text-primary-400 font-bold text-xl mt-2">
                       {formatPrice(cartItem.finalPrice * cartItem.quantity)}
                     </p>
                   </div>
@@ -124,10 +151,10 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                   {/* Remove Button - LARGER for kiosk */}
                   <button
                     onClick={() => handleRemoveClick(cartItem.id)}
-                    className="w-12 h-12 bg-red-100 hover:bg-red-200 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors"
+                    className="w-12 h-12 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors"
                     aria-label="Remove item"
                   >
-                    <Trash2 className="w-6 h-6 text-red-600" />
+                    <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
                   </button>
                 </div>
               ))}
@@ -149,23 +176,23 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
 
         {/* Footer - LARGER for kiosk */}
         {cart.length > 0 && (
-          <div className="border-t-2 border-gray-200 p-6 bg-gradient-to-b from-gray-50 to-white flex-shrink-0">
+          <div className="border-t-2 border-gray-200 dark:border-gray-700 p-6 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 flex-shrink-0">
             <div className="space-y-3 mb-6">
-              <div className="flex justify-between text-lg text-gray-700">
+              <div className="flex justify-between text-lg text-gray-700 dark:text-gray-300">
                 <span className="font-medium">{t('subtotal')}:</span>
                 <span className="font-semibold">
                   {formatPrice(orderSummary.subtotal)}
                 </span>
               </div>
-              <div className="flex justify-between text-lg text-gray-700">
+              <div className="flex justify-between text-lg text-gray-700 dark:text-gray-300">
                 <span className="font-medium">{t('tax')} (21%):</span>
                 <span className="font-semibold">
                   {formatPrice(orderSummary.tax)}
                 </span>
               </div>
-              <div className="flex justify-between text-2xl font-bold text-gray-900 pt-3 border-t-2 border-gray-300">
+              <div className="flex justify-between text-2xl font-bold text-gray-900 dark:text-white pt-3 border-t-2 border-gray-300 dark:border-gray-600">
                 <span>{t('total')}:</span>
-                <span className="text-primary-600 text-3xl">
+                <span className="text-primary-600 dark:text-primary-400 text-3xl">
                   {formatPrice(orderSummary.total)}
                 </span>
               </div>
@@ -178,7 +205,7 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
             </button>
             <button
               onClick={onClose}
-              className="w-full py-3 px-6 mt-3 bg-gray-100 text-gray-700 text-lg font-semibold rounded-xl hover:bg-gray-200 transition-colors"
+              className="w-full py-3 px-6 mt-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-lg font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
               {t('continue_shopping')}
             </button>

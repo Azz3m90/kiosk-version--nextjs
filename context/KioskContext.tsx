@@ -1,10 +1,11 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
 import type {
   CartItem,
   Step,
   Language,
+  Theme,
   KioskContextType,
   OrderSummary,
 } from '@/types';
@@ -16,6 +17,17 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [currentStep, setCurrentStep] = useState<Step>('food');
   const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
+  const [currentTheme, setCurrentTheme] = useState<Theme>('light');
+
+  // Apply theme to document
+  useEffect(() => {
+    const root = document.documentElement;
+    if (currentTheme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [currentTheme]);
 
   const addToCart = useCallback((item: CartItem) => {
     setCart((prevCart) => {
@@ -61,13 +73,27 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const navigateToStep = useCallback((step: Step) => {
+    // Enforce rule: must have items in cart before navigating to review/payment
+    if (step === 'review' || step === 'payment') {
+      const hasItems = cart.length > 0;
+      if (!hasItems) {
+        // Prevent navigation if no items in cart
+        console.warn('Cannot navigate to', step, '- Cart is empty');
+        return;
+      }
+    }
+    
     setCurrentStep(step);
     // Scroll to top when changing steps
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  }, [cart]);
 
   const changeLanguage = useCallback((lang: Language) => {
     setCurrentLanguage(lang);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setCurrentTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   }, []);
 
   const getOrderSummary = useCallback((): OrderSummary => {
@@ -91,6 +117,7 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
     setCart([]);
     setCurrentStep('food');
     setCurrentLanguage('en');
+    setCurrentTheme('light');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
@@ -99,12 +126,14 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
       cart,
       currentStep,
       currentLanguage,
+      currentTheme,
       addToCart,
       removeFromCart,
       updateQuantity,
       clearCart,
       navigateToStep,
       changeLanguage,
+      toggleTheme,
       getOrderSummary,
       resetKiosk,
     }),
@@ -112,12 +141,14 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
       cart,
       currentStep,
       currentLanguage,
+      currentTheme,
       addToCart,
       removeFromCart,
       updateQuantity,
       clearCart,
       navigateToStep,
       changeLanguage,
+      toggleTheme,
       getOrderSummary,
       resetKiosk,
     ]
