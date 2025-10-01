@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Categories Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #10b981;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #666;
+            margin-top: 30px;
+        }
+        .category-list {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .category {
+            background: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        ul {
+            line-height: 1.8;
+        }
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #e83e8c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Filter Categories Fixed!</h1>
+        
+        <div class="status success">
+            <strong>Status:</strong> The filter functionality has been successfully fixed!
+        </div>
+        
+        <h2>🍔 Food Categories</h2>
+        <p>The food section now uses the correct categories that match your data:</p>
+        <div class="category-list">
+            <span class="category">all</span>
+            <span class="category">appetizers</span>
+            <span class="category">mains</span>
+            <span class="category">desserts</span>
+        </div>
+        
+        <h2>☕ Drink Categories</h2>
+        <p>The drinks section now uses the correct categories that match your data:</p>
+        <div class="category-list">
+            <span class="category">all</span>
+            <span class="category">hot</span>
+            <span class="category">cold</span>
+            <span class="category">alcoholic</span>
+        </div>
+        
+        <div class="status info">
+            <strong>What was fixed:</strong>
+            <ul>
+                <li>Changed food categories from <code>['burgers', 'pizza', 'pasta', 'salads', 'sides']</code> to <code>['appetizers', 'mains', 'desserts']</code></li>
+                <li>Changed drink categories from <code>['soft-drinks', 'juices', 'coffee', 'beer', 'wine']</code> to <code>['hot', 'cold', 'alcoholic']</code></li>
+                <li>Categories now match the actual data in <code>restaurant-data.ts</code></li>
+                <li>Translation keys were already present for all correct categories</li>
+            </ul>
+        </div>
+        
+        <h2>🎯 How to Test</h2>
+        <ul>
+            <li>Go to the Food section in your kiosk app</li>
+            <li>Click on "Appetizers" - you should see Buffalo Wings, Loaded Nachos, etc.</li>
+            <li>Click on "Main Courses" - you should see burgers and other main dishes</li>
+            <li>Click on "Desserts" - you should see dessert items</li>
+            <li>Go to the Drinks section</li>
+            <li>Click on "Hot Drinks" - you should see coffee, tea, etc.</li>
+            <li>Click on "Cold Drinks" - you should see juices, smoothies, etc.</li>
+            <li>Click on "Alcoholic" - you should see wine and beer options</li>
+            <li>The price range sliders should also work correctly</li>
+        </ul>
+        
+        <h2>✨ Summary</h2>
+        <p>The filter functionality is now fully operational! The categories in the UI now correctly match the categories in your data, so filtering will work as expected.</p>
+    </div>
+</body>
+</html>

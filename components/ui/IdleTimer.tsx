@@ -1,0 +1,163 @@
+'use client';
+
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { useKiosk } from '@/context/KioskContext';
+import { AlertTriangle } from 'lucide-react';
+
+interface IdleTimerProps {
+  idleTimeout?: number; // Time in ms before showing warning (default: 60 seconds)
+  warningTimeout?: number; // Time in ms to show warning before reset (default: 30 seconds)
+}
+
+export function IdleTimer({ 
+  idleTimeout = 60000, // 60 seconds
+  warningTimeout = 30000 // 30 seconds
+}: IdleTimerProps) {
+  const { resetKiosk } = useKiosk();
+  const [showWarning, setShowWarning] = useState(false);
+  const [countdown, setCountdown] = useState(warningTimeout / 1000);
+  const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const warningTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const clearAllTimers = useCallback(() => {
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = null;
+    }
+    if (warningTimerRef.current) {
+      clearTimeout(warningTimerRef.current);
+      warningTimerRef.current = null;
+    }
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
+    }
+  }, []);
+
+  const handleReset = useCallback(() => {
+    clearAllTimers();
+    setShowWarning(false);
+    resetKiosk();
+  }, [clearAllTimers, resetKiosk]);
+
+  const startWarning = useCallback(() => {
+    setShowWarning(true);
+    setCountdown(warningTimeout / 1000);
+
+    // Start countdown
+    countdownIntervalRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          handleReset();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // Set final reset timer
+    warningTimerRef.current = setTimeout(() => {
+      handleReset();
+    }, warningTimeout);
+  }, [warningTimeout, handleReset]);
+
+  const resetIdleTimer = useCallback(() => {
+    clearAllTimers();
+    setShowWarning(false);
+
+    // Start idle timer
+    idleTimerRef.current = setTimeout(() => {
+      startWarning();
+    }, idleTimeout);
+  }, [idleTimeout, startWarning, clearAllTimers]);
+
+  const handleUserActivity = useCallback(() => {
+    if (!showWarning) {
+      resetIdleTimer();
+    }
+  }, [showWarning, resetIdleTimer]);
+
+  const handleContinue = useCallback(() => {
+    clearAllTimers();
+    setShowWarning(false);
+    resetIdleTimer();
+  }, [clearAllTimers, resetIdleTimer]);
+
+  useEffect(() => {
+    // Events to track user activity
+    const events = [
+      'mousedown',
+      'mousemove',
+      'keypress',
+      'scroll',
+      'touchstart',
+      'click',
+    ];
+
+    // Add event listeners
+    events.forEach((event) => {
+      document.addEventListener(event, handleUserActivity);
+    });
+
+    // Start initial timer
+    resetIdleTimer();
+
+    // Cleanup
+    return () => {
+      events.forEach((event) => {
+        document.removeEventListener(event, handleUserActivity);
+      });
+      clearAllTimers();
+    };
+  }, [handleUserActivity, resetIdleTimer, clearAllTimers]);
+
+  if (!showWarning) return null;
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 animate-scale-in">
+        <div className="flex flex-col items-center text-center">
+          {/* Warning Icon */}
+          <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
+            <AlertTriangle className="w-12 h-12 text-yellow-600" />
+          </div>
+
+          {/* Title */}
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            Are you still there?
+          </h2>
+
+          {/* Message */}
+          <p className="text-gray-600 mb-6">
+            Your session will be reset in <span className="font-bold text-red-600">{countdown}</span> seconds due to inactivity.
+          </p>
+
+          {/* Countdown Progress */}
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-8 overflow-hidden">
+            <div
+              className="bg-gradient-to-r from-yellow-500 to-red-500 h-full transition-all duration-1000 ease-linear"
+              style={{ width: `${(countdown / (warningTimeout / 1000)) * 100}%` }}
+            />
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-4 w-full">
+            <button
+              onClick={handleContinue}
+              className="flex-1 btn btn-primary text-lg py-4 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              I'm Still Here
+            </button>
+            <button
+              onClick={handleReset}
+              className="flex-1 btn btn-secondary text-lg py-4"
+            >
+              Start Over
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
