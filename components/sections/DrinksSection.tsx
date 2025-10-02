@@ -48,10 +48,10 @@ export function DrinksSection() {
     <section className="animate-fade-in">
       {/* Section Header */}
       <div className="mb-8">
-        <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-3">
+        <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-3">
           {t('drinks_title')}
         </h2>
-        <p className="text-gray-600 text-base lg:text-lg">{t('drinks_subtitle')}</p>
+        <p className="text-gray-600 dark:text-gray-300 text-base lg:text-lg">{t('drinks_subtitle')}</p>
       </div>
 
       {/* Filter Bar */}
@@ -67,14 +67,14 @@ export function DrinksSection() {
 
       {/* Items Grid */}
       {filteredItems.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-6">
           {filteredItems.map((item: DrinkItem) => (
             <MenuItem key={item.id} item={item} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
-          <p className="text-gray-500 text-xl">{t('no_items_found')}</p>
+        <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-sm">
+          <p className="text-gray-500 dark:text-gray-400 text-xl">{t('no_items_found')}</p>
         </div>
       )}
     </section>

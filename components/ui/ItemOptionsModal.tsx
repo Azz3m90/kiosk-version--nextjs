@@ -10,15 +10,16 @@ import type { MenuItem as MenuItemType, ItemOption, OptionChoice, SelectedOption
 
 interface ItemOptionsModalProps {
   item: MenuItemType;
+  initialQuantity?: number;
   onClose: () => void;
 }
 
-export function ItemOptionsModal({ item, onClose }: ItemOptionsModalProps) {
+export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOptionsModalProps) {
   const { addToCart } = useKiosk();
   const { t } = useTranslation();
   const [selectedChoices, setSelectedChoices] = useState<Record<string, string[]>>({});
   const [specialInstructions, setSpecialInstructions] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(initialQuantity);
   const [currentStep, setCurrentStep] = useState(0);
 
   // Lock body scroll when modal is open

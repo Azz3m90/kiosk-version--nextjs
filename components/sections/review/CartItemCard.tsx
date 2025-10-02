@@ -19,29 +19,29 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
   console.log('CartItemCard rendering:', cartItem);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 lg:p-5 border border-gray-200 dark:border-gray-700">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-3 border border-gray-200 dark:border-gray-700">
       {/* Main Row: Item Name + Price */}
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex-1">
-          <h3 className="text-base lg:text-lg font-bold text-gray-800 dark:text-white mb-1">
+      <div className="flex justify-between items-start mb-2">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-bold text-gray-800 dark:text-white mb-1 truncate">
             {cartItem.name || 'Unnamed Item'}
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-xs text-gray-600 dark:text-gray-400">
             {formatPrice(cartItem.finalPrice)} × {cartItem.quantity}
           </p>
         </div>
-        <p className="text-lg lg:text-xl font-bold text-gray-800 dark:text-white ml-4">
+        <p className="text-base font-bold text-gray-800 dark:text-white ml-3 flex-shrink-0">
           {formatPrice(cartItem.finalPrice * cartItem.quantity)}
         </p>
       </div>
 
       {/* Selected Options */}
       {cartItem.selectedOptions && cartItem.selectedOptions.length > 0 && (
-        <div className="space-y-1 mb-3 pl-0">
+        <div className="space-y-0.5 mb-2">
           {cartItem.selectedOptions.map((opt, idx) => (
             <div
               key={idx}
-              className="text-xs lg:text-sm text-gray-600 dark:text-gray-400"
+              className="text-xs text-gray-600 dark:text-gray-400"
             >
               <span className="font-semibold">{opt.optionName}:</span>{' '}
               {opt.choices.join(', ')}
@@ -57,8 +57,8 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
 
       {/* Special Instructions */}
       {cartItem.specialInstructions && (
-        <div className="bg-amber-50 dark:bg-amber-900/20 px-3 py-2 rounded-md border border-amber-200 dark:border-amber-800 mb-3">
-          <p className="text-xs lg:text-sm text-amber-700 dark:text-amber-400">
+        <div className="bg-amber-50 dark:bg-amber-900/20 px-2 py-1.5 rounded border border-amber-200 dark:border-amber-800 mb-2">
+          <p className="text-xs text-amber-700 dark:text-amber-400">
             <span className="font-bold">{t('note')}:</span>{' '}
             <span className="italic">{cartItem.specialInstructions}</span>
           </p>

@@ -67,14 +67,14 @@ export function FoodSection() {
 
       {/* Items Grid */}
       {filteredItems.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-6">
           {filteredItems.map((item: FoodItem) => (
             <MenuItem key={item.id} item={item} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
-          <p className="text-gray-500 text-xl">{t('no_items_found')}</p>
+        <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl shadow-sm">
+          <p className="text-gray-500 dark:text-gray-400 text-xl">{t('no_items_found')}</p>
         </div>
       )}
     </section>

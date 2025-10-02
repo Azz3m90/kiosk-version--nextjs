@@ -94,44 +94,44 @@ export function ConfirmDialog({
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 animate-scale-in"
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 animate-scale-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+          className="absolute top-4 right-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors min-w-[44px] min-h-[44px]"
           aria-label="Close dialog"
         >
-          <X className="w-5 h-5 text-gray-500" />
+          <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
         </button>
 
         {/* Icon */}
-        <div className={`w-16 h-16 ${style.iconBg} rounded-full flex items-center justify-center mb-4 mx-auto`}>
+        <div className={`w-16 h-16 ${style.iconBg} dark:${style.iconBg}/20 rounded-full flex items-center justify-center mb-4 mx-auto`}>
           <span className="text-4xl">{style.icon}</span>
         </div>
 
         {/* Title */}
-        <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">
           {title}
         </h3>
 
         {/* Message */}
-        <p className="text-gray-600 mb-6 text-center">
+        <p className="text-gray-600 dark:text-gray-300 mb-6 text-center text-lg">
           {message}
         </p>
 
-        {/* Actions */}
+        {/* Actions - Kiosk Optimized */}
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 btn btn-secondary py-3 text-lg"
+            className="flex-1 btn btn-secondary py-4 text-lg font-semibold active:scale-95"
           >
             {cancelText}
           </button>
           <button
             onClick={handleConfirm}
-            className={`flex-1 py-3 text-lg rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${style.button}`}
+            className={`flex-1 py-4 text-lg rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95 min-h-[56px] ${style.button}`}
           >
             {confirmText}
           </button>

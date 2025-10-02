@@ -95,26 +95,31 @@
     }
   }
 
-  /* Button styles */
+  /* Button styles - Kiosk Optimized with Dark Mode */
   .btn {
     @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply min-h-[44px] min-w-[44px] active:scale-95;
   }
 
   .btn-primary {
     @apply bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500;
+    @apply dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-400;
   }
 
   .btn-secondary {
     @apply bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400;
+    @apply dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
   }
 
-  /* Card styles */
+  /* Card styles with Dark Mode */
   .card {
     @apply bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-200;
+    @apply dark:bg-gray-800 dark:shadow-xl;
   }
 
   .card-hover {
     @apply hover:shadow-xl hover:-translate-y-1;
+    @apply dark:hover:shadow-2xl;
   }
 
   /* Input styles */

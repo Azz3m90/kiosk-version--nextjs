@@ -1,5 +1,5 @@
 // Core Types
-export type Language = 'en' | 'fr' | 'nl' | 'de' | 'es' | 'it';
+export type Language = 'en' | 'fr' | 'nl';
 
 export type Theme = 'light' | 'dark';
 

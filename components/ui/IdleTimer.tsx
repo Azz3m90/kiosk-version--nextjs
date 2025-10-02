@@ -138,42 +138,42 @@ export function IdleTimer({
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 animate-scale-in">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 animate-scale-in border-2 border-yellow-400 dark:border-yellow-600">
         <div className="flex flex-col items-center text-center">
           {/* Warning Icon */}
-          <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
-            <AlertTriangle className="w-12 h-12 text-yellow-600" />
+          <div className="w-20 h-20 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mb-6">
+            <AlertTriangle className="w-12 h-12 text-yellow-600 dark:text-yellow-400" />
           </div>
 
           {/* Title */}
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
             Are you still there?
           </h2>
 
           {/* Message */}
-          <p className="text-gray-600 mb-6">
-            Your session will be reset in <span className="font-bold text-red-600">{countdown}</span> seconds due to inactivity.
+          <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg">
+            Your session will be reset in <span className="font-bold text-red-600 dark:text-red-400 text-xl">{countdown}</span> seconds due to inactivity.
           </p>
 
           {/* Countdown Progress */}
-          <div className="w-full bg-gray-200 rounded-full h-3 mb-8 overflow-hidden">
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-8 overflow-hidden">
             <div
-              className="bg-gradient-to-r from-yellow-500 to-red-500 h-full transition-all duration-1000 ease-linear"
+              className="bg-gradient-to-r from-yellow-500 to-red-500 dark:from-yellow-400 dark:to-red-400 h-full transition-all duration-1000 ease-linear"
               style={{ width: `${(countdown / (warningTimeout / 1000)) * 100}%` }}
             />
           </div>
 
-          {/* Actions */}
+          {/* Actions - Kiosk Optimized */}
           <div className="flex gap-4 w-full">
             <button
               onClick={handleContinue}
-              className="flex-1 btn btn-primary text-lg py-4 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="flex-1 btn btn-primary text-lg py-4 font-bold shadow-lg hover:shadow-xl active:scale-95"
             >
               I'm Still Here
             </button>
             <button
               onClick={handleReset}
-              className="flex-1 btn btn-secondary text-lg py-4"
+              className="flex-1 btn btn-secondary text-lg py-4 font-semibold active:scale-95"
             >
               Start Over
             </button>

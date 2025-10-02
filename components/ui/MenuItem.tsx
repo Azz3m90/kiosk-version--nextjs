@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatPrice } from '@/lib/utils';
-import { Plus, Star } from 'lucide-react';
+import { Plus, Minus, Star } from 'lucide-react';
 import Image from 'next/image';
 import type { MenuItem as MenuItemType } from '@/types';
 import { ItemOptionsModal } from './ItemOptionsModal';
@@ -17,6 +17,15 @@ export function MenuItem({ item }: MenuItemProps) {
   const { addToCart } = useKiosk();
   const { t } = useTranslation();
   const [showOptionsModal, setShowOptionsModal] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+
+  const incrementQuantity = () => {
+    setQuantity(prev => prev + 1);
+  };
+
+  const decrementQuantity = () => {
+    setQuantity(prev => Math.max(1, prev - 1));
+  };
 
   const handleAddToCart = () => {
     if (item.options && item.options.length > 0) {
@@ -29,12 +38,13 @@ export function MenuItem({ item }: MenuItemProps) {
         description: item.description,
         basePrice: item.price,
         finalPrice: item.price,
-        quantity: 1,
+        quantity: quantity,
         image: item.image,
         selectedOptions: [],
         type: ('category' in item && ['appetizers', 'mains', 'desserts'].includes(item.category)) ? 'food' as const : 'drink' as const,
       };
       addToCart(cartItem);
+      setQuantity(1); // Reset quantity after adding
     }
   };
 
@@ -74,18 +84,43 @@ export function MenuItem({ item }: MenuItemProps) {
             {item.description}
           </p>
 
-          {/* Price and Add Button */}
-          <div className="flex items-center justify-between">
+          {/* Price */}
+          <div className="mb-4">
             <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
               {formatPrice(item.price)}
             </span>
+          </div>
+
+          {/* Quantity Controls and Add Button */}
+          <div className="flex items-center gap-2 w-full">
+            {/* Quantity Controls - Kiosk Optimized */}
+            <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-xl px-1.5 py-1 flex-shrink-0">
+              <button
+                onClick={decrementQuantity}
+                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm hover:shadow-md"
+                aria-label="Decrease quantity"
+              >
+                <Minus className="w-5 h-5 text-gray-700 dark:text-gray-300 stroke-[3]" />
+              </button>
+              <span className="text-lg font-bold text-gray-800 dark:text-gray-100 w-8 text-center">
+                {quantity}
+              </span>
+              <button
+                onClick={incrementQuantity}
+                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm hover:shadow-md"
+                aria-label="Increase quantity"
+              >
+                <Plus className="w-5 h-5 text-gray-700 dark:text-gray-300 stroke-[3]" />
+              </button>
+            </div>
+            {/* Add Button - Kiosk Optimized */}
             <button
               onClick={handleAddToCart}
-              className="btn-primary px-6 py-3 flex items-center gap-2 group-hover:scale-105 transition-transform"
+              className="btn-primary flex-1 min-h-[44px] min-w-0 px-3 py-2.5 flex items-center justify-center gap-1.5 text-base font-semibold transition-all active:scale-95 hover:shadow-lg"
               aria-label={`Add ${item.name} to cart`}
             >
-              <Plus className="w-5 h-5" />
-              <span>{t('add')}</span>
+              <Plus className="w-5 h-5 stroke-[3] flex-shrink-0" />
+              <span className="truncate">{t('add')}</span>
             </button>
           </div>
 
@@ -102,7 +137,11 @@ export function MenuItem({ item }: MenuItemProps) {
       {showOptionsModal && (
         <ItemOptionsModal
           item={item}
-          onClose={() => setShowOptionsModal(false)}
+          initialQuantity={quantity}
+          onClose={() => {
+            setShowOptionsModal(false);
+            setQuantity(1); // Reset quantity after closing modal
+          }}
         />
       )}
     </>
