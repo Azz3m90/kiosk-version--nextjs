@@ -10,6 +10,7 @@ import type {
   OrderSummary,
 } from '@/types';
 import { TAX_RATE } from '@/data/restaurant-data';
+import { ThemeTransition } from '@/components/ui/ThemeTransition';
 
 const KioskContext = createContext<KioskContextType | undefined>(undefined);
 
@@ -18,15 +19,14 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
   const [currentStep, setCurrentStep] = useState<Step>('food');
   const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [currentTheme, setCurrentTheme] = useState<Theme>('light');
+  const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
 
-  // Apply theme to document with smooth transition
+  // Apply theme to document with cloud fog transition
   useEffect(() => {
     const root = document.documentElement;
     
-    // Create and add transition overlay for smooth effect
-    const overlay = document.createElement('div');
-    overlay.className = 'theme-transition-overlay';
-    document.body.appendChild(overlay);
+    // Trigger theme transition animation
+    setIsThemeTransitioning(true);
     
     // Add transition class to body for smoother effect
     document.body.classList.add('theme-transitioning');
@@ -39,16 +39,12 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
     }
     
     // Remove transition class after animation
-    setTimeout(() => {
+    const transitionTimer = setTimeout(() => {
       document.body.classList.remove('theme-transitioning');
-    }, 500);
+      setIsThemeTransitioning(false);
+    }, 1200);
     
-    // Remove overlay after animation
-    setTimeout(() => {
-      if (overlay.parentNode) {
-        overlay.remove();
-      }
-    }, 600);
+    return () => clearTimeout(transitionTimer);
   }, [currentTheme]);
 
   const addToCart = useCallback((item: CartItem) => {
@@ -181,7 +177,10 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <KioskContext.Provider value={value}>{children}</KioskContext.Provider>
+    <KioskContext.Provider value={value}>
+      {children}
+      <ThemeTransition isTransitioning={isThemeTransitioning} theme={currentTheme} />
+    </KioskContext.Provider>
   );
 }
 

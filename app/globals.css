@@ -176,34 +176,7 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Theme transition overlay */
-  .theme-transition-overlay {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
-    animation: themeTransitionPulse 0.6s ease-in-out;
-  }
-
-  .dark .theme-transition-overlay {
-    background: radial-gradient(circle at center, transparent 0%, rgba(255, 255, 255, 0.05) 100%);
-  }
-
-  @keyframes themeTransitionPulse {
-    0% {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.05);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1);
-    }
-  }
+  /* Legacy theme transition - now replaced by ThemeTransition component */
 
   /* Shimmer animation for theme toggle */
   .animate-shimmer {
@@ -219,6 +192,25 @@
     }
   }
 
+  /* Fast shimmer for theme transition */
+  .animate-shimmer-fast {
+    animation: shimmerFast 1s ease-in-out;
+  }
+
+  @keyframes shimmerFast {
+    0% {
+      background-position: -200% 0;
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      background-position: 200% 0;
+      opacity: 0;
+    }
+  }
+
   /* Slow pulse for sun icon */
   .animate-pulse-slow {
     animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -231,6 +223,133 @@
     50% {
       opacity: 0.8;
     }
+  }
+
+  /* Cloud Sweep - Diagonal movement from top-left to bottom-right */
+  .cloud-sweep-layer {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      ellipse 1200px 1200px,
+      rgba(156, 163, 175, 0.5) 0%,
+      rgba(156, 163, 175, 0.35) 25%,
+      rgba(156, 163, 175, 0.2) 50%,
+      transparent 75%
+    );
+    filter: blur(80px);
+    animation: sweepDiagonal 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: calc(var(--layer) * 0.08s);
+    opacity: 0;
+    transform: translate(-100%, -100%) rotate(-45deg);
+  }
+
+  .dark .cloud-sweep-layer {
+    background: radial-gradient(
+      ellipse 1200px 1200px,
+      rgba(51, 65, 85, 0.7) 0%,
+      rgba(51, 65, 85, 0.5) 25%,
+      rgba(51, 65, 85, 0.3) 50%,
+      transparent 75%
+    );
+  }
+
+  /* Diagonal sweep animation - top-left to bottom-right */
+  @keyframes sweepDiagonal {
+    0% {
+      opacity: 0;
+      transform: translate(-100%, -100%) rotate(-45deg) scale(0.8);
+    }
+    15% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 1;
+      transform: translate(0%, 0%) rotate(-45deg) scale(1);
+    }
+    85% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(100%, 100%) rotate(-45deg) scale(1.2);
+    }
+  }
+
+  /* Additional fog texture layers for depth */
+  .fog-texture-layer {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    opacity: 0;
+    filter: blur(120px);
+  }
+
+  .fog-texture-1 {
+    background: radial-gradient(
+      circle at 30% 30%,
+      rgba(203, 213, 225, 0.4) 0%,
+      rgba(203, 213, 225, 0.2) 30%,
+      transparent 60%
+    );
+    animation: sweepDiagonal 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 0.1s;
+    transform: translate(-100%, -100%) rotate(-45deg);
+  }
+
+  .dark .fog-texture-1 {
+    background: radial-gradient(
+      circle at 30% 30%,
+      rgba(30, 41, 59, 0.6) 0%,
+      rgba(30, 41, 59, 0.3) 30%,
+      transparent 60%
+    );
+  }
+
+  .fog-texture-2 {
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(226, 232, 240, 0.35) 0%,
+      rgba(226, 232, 240, 0.15) 30%,
+      transparent 60%
+    );
+    animation: sweepDiagonal 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 0.15s;
+    transform: translate(-100%, -100%) rotate(-45deg);
+  }
+
+  .dark .fog-texture-2 {
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(15, 23, 42, 0.7) 0%,
+      rgba(15, 23, 42, 0.4) 30%,
+      transparent 60%
+    );
+  }
+
+  .fog-texture-3 {
+    background: radial-gradient(
+      circle at 70% 70%,
+      rgba(241, 245, 249, 0.3) 0%,
+      rgba(241, 245, 249, 0.1) 30%,
+      transparent 60%
+    );
+    animation: sweepDiagonal 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 0.2s;
+    transform: translate(-100%, -100%) rotate(-45deg);
+  }
+
+  .dark .fog-texture-3 {
+    background: radial-gradient(
+      circle at 70% 70%,
+      rgba(71, 85, 105, 0.5) 0%,
+      rgba(71, 85, 105, 0.2) 30%,
+      transparent 60%
+    );
   }
 
   /* Badge styles */
