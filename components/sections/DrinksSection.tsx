@@ -6,6 +6,7 @@ import { useFilters } from '@/hooks/useFilters';
 import { restaurantData } from '@/data/restaurant-data';
 import { MenuItem } from '@/components/ui/MenuItem';
 import { FilterBar } from '@/components/ui/FilterBar';
+import { NavigationButtons } from '@/components/ui/NavigationButtons';
 import type { DrinkItem } from '@/types';
 
 const drinkCategories = ['all', 'hot', 'cold', 'alcoholic'];
@@ -77,6 +78,9 @@ export function DrinksSection() {
           <p className="text-gray-500 dark:text-gray-400 text-xl">{t('no_items_found')}</p>
         </div>
       )}
+
+      {/* Navigation Buttons */}
+      <NavigationButtons currentStep="drinks" />
     </section>
   );
 }

@@ -1,0 +1,116 @@
+'use client';
+
+import { useKiosk } from '@/context/KioskContext';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Step } from '@/types';
+
+interface NavigationButtonsProps {
+  currentStep: Step;
+  showNext?: boolean;
+  showPrevious?: boolean;
+  onNext?: () => void;
+  onPrevious?: () => void;
+  nextLabel?: string;
+  previousLabel?: string;
+  nextDisabled?: boolean;
+}
+
+const stepOrder: Step[] = ['food', 'drinks', 'review', 'payment'];
+
+export function NavigationButtons({
+  currentStep,
+  showNext = true,
+  showPrevious = true,
+  onNext,
+  onPrevious,
+  nextLabel,
+  previousLabel,
+  nextDisabled = false,
+}: NavigationButtonsProps) {
+  const { navigateToStep, cart } = useKiosk();
+  const { t } = useTranslation();
+
+  const currentIndex = stepOrder.indexOf(currentStep);
+  const hasPrevious = currentIndex > 0;
+  const hasNext = currentIndex < stepOrder.length - 1;
+
+  const handlePrevious = () => {
+    if (onPrevious) {
+      onPrevious();
+    } else if (hasPrevious) {
+      const previousStep = stepOrder[currentIndex - 1];
+      navigateToStep(previousStep);
+    }
+  };
+
+  const handleNext = () => {
+    if (onNext) {
+      onNext();
+    } else if (hasNext) {
+      const nextStep = stepOrder[currentIndex + 1];
+      // Only allow navigation to review/payment if cart has items
+      if ((nextStep === 'review' || nextStep === 'payment') && cart.length === 0) {
+        return;
+      }
+      navigateToStep(nextStep);
+    }
+  };
+
+  // Don't show navigation on payment page (handled by payment button)
+  if (currentStep === 'payment') {
+    return null;
+  }
+
+  return (
+    <div className="flex justify-between items-center gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      {/* Previous Button */}
+      {showPrevious && hasPrevious ? (
+        <button
+          onClick={handlePrevious}
+          className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          <span>{previousLabel || t('back')}</span>
+        </button>
+      ) : (
+        <div></div>
+      )}
+
+      {/* Next Button */}
+      {showNext && hasNext && (
+        <button
+          onClick={handleNext}
+          disabled={nextDisabled}
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
+        >
+          <span>{nextLabel || t('next')}</span>
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+}

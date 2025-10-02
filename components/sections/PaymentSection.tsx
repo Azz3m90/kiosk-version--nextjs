@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { validateCardNumber, validateCVV } from '@/lib/utils';
+import { NavigationButtons } from '@/components/ui/NavigationButtons';
 import { PaymentSuccessMessage } from './payment/PaymentSuccessMessage';
 import { PaymentMethodSelector } from './payment/PaymentMethodSelector';
 import { CardPaymentForm } from './payment/CardPaymentForm';
@@ -72,51 +73,61 @@ export function PaymentSection() {
   }
 
   return (
-    <section className="animate-fade-in">
+    <section className="flex flex-col h-[calc(100vh-180px)] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl shadow-lg animate-fade-in">
       {/* Section Header */}
-      <div className="mb-8">
-        <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 px-6 rounded-t-2xl flex-shrink-0">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           {t('payment_title')}
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 text-lg font-medium">{t('payment_subtitle')}</p>
+        <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{t('payment_subtitle')}</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Payment Form */}
-        <div className="lg:col-span-2">
-          {/* Payment Method Selection */}
-          <PaymentMethodSelector
-            selectedMethod={paymentMethod}
-            onMethodChange={setPaymentMethod}
-          />
-
-          {/* Card Payment Form */}
-          {paymentMethod === 'card' && (
-            <CardPaymentForm
-              cardNumber={cardNumber}
-              setCardNumber={setCardNumber}
-              cardName={cardName}
-              setCardName={setCardName}
-              expiryDate={expiryDate}
-              setExpiryDate={setExpiryDate}
-              cvv={cvv}
-              setCvv={setCvv}
-              errors={errors}
+      {/* Content Area - Scrollable */}
+      <div className="flex-1 overflow-y-auto p-4 lg:p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
+          {/* Payment Form */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Payment Method Selection */}
+            <PaymentMethodSelector
+              selectedMethod={paymentMethod}
+              onMethodChange={setPaymentMethod}
             />
-          )}
 
-          {/* Mobile Payment */}
-          {paymentMethod === 'mobile' && <MobilePaymentView />}
+            {/* Card Payment Form */}
+            {paymentMethod === 'card' && (
+              <CardPaymentForm
+                cardNumber={cardNumber}
+                setCardNumber={setCardNumber}
+                cardName={cardName}
+                setCardName={setCardName}
+                expiryDate={expiryDate}
+                setExpiryDate={setExpiryDate}
+                cvv={cvv}
+                setCvv={setCvv}
+                errors={errors}
+              />
+            )}
 
-          {/* Cash Payment */}
-          {paymentMethod === 'cash' && <CashPaymentView />}
+            {/* Mobile Payment */}
+            {paymentMethod === 'mobile' && <MobilePaymentView />}
+
+            {/* Cash Payment */}
+            {paymentMethod === 'cash' && <CashPaymentView />}
+          </div>
+
+          {/* Order Summary Sidebar */}
+          <div className="lg:col-span-1">
+            <PaymentSummaryPanel
+              onPayment={handlePayment}
+              isProcessing={isProcessing}
+            />
+          </div>
         </div>
+      </div>
 
-        {/* Order Summary Sidebar */}
-        <PaymentSummaryPanel
-          onPayment={handlePayment}
-          isProcessing={isProcessing}
-        />
+      {/* Navigation Buttons */}
+      <div className="flex-shrink-0 px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
+        <NavigationButtons currentStep="payment" />
       </div>
     </section>
   );
