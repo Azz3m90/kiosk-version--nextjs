@@ -56,13 +56,8 @@ export function NavigationButtons({
     }
   };
 
-  // Don't show navigation on payment page (handled by payment button)
-  if (currentStep === 'payment') {
-    return null;
-  }
-
   return (
-    <div className="flex justify-between items-center gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <div className="flex justify-between items-center gap-4">
       {/* Previous Button */}
       {showPrevious && hasPrevious ? (
         <button
@@ -82,7 +77,7 @@ export function NavigationButtons({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          <span>{previousLabel || t('back')}</span>
+          <span>{previousLabel || t('previous')}</span>
         </button>
       ) : (
         <div></div>

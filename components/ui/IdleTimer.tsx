@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useKiosk } from '@/context/KioskContext';
 import { AlertTriangle } from 'lucide-react';
 
@@ -19,8 +19,22 @@ export function IdleTimer({
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const warningTimerRef = useRef<NodeJS.Timeout | null>(null);
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Store the resetKiosk function in a ref to avoid dependency issues
+  const resetKioskRef = useRef(resetKiosk);
+  // Store showWarning in a ref so event handlers can access current value
+  const showWarningRef = useRef(showWarning);
+  
+  useEffect(() => {
+    resetKioskRef.current = resetKiosk;
+  }, [resetKiosk]);
+  
+  useEffect(() => {
+    showWarningRef.current = showWarning;
+  }, [showWarning]);
 
-  const clearAllTimers = useCallback(() => {
+  // Clear all timers function - stable reference
+  const clearAllTimers = () => {
     if (idleTimerRef.current) {
       clearTimeout(idleTimerRef.current);
       idleTimerRef.current = null;
@@ -33,15 +47,15 @@ export function IdleTimer({
       clearInterval(countdownIntervalRef.current);
       countdownIntervalRef.current = null;
     }
-  }, []);
+  };
 
-  const handleReset = useCallback(() => {
+  const handleReset = () => {
     clearAllTimers();
     setShowWarning(false);
-    resetKiosk();
-  }, [clearAllTimers, resetKiosk]);
+    resetKioskRef.current();
+  };
 
-  const startWarning = useCallback(() => {
+  const startWarning = () => {
     setShowWarning(true);
     setCountdown(warningTimeout / 1000);
 
@@ -49,7 +63,6 @@ export function IdleTimer({
     countdownIntervalRef.current = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          handleReset();
           return 0;
         }
         return prev - 1;
@@ -60,9 +73,9 @@ export function IdleTimer({
     warningTimerRef.current = setTimeout(() => {
       handleReset();
     }, warningTimeout);
-  }, [warningTimeout, handleReset]);
+  };
 
-  const resetIdleTimer = useCallback(() => {
+  const resetIdleTimer = () => {
     clearAllTimers();
     setShowWarning(false);
 
@@ -70,19 +83,20 @@ export function IdleTimer({
     idleTimerRef.current = setTimeout(() => {
       startWarning();
     }, idleTimeout);
-  }, [idleTimeout, startWarning, clearAllTimers]);
+  };
 
-  const handleUserActivity = useCallback(() => {
-    if (!showWarning) {
+  const handleUserActivity = () => {
+    // Only reset timer if warning is not showing (use ref to get current value)
+    if (!showWarningRef.current) {
       resetIdleTimer();
     }
-  }, [showWarning, resetIdleTimer]);
+  };
 
-  const handleContinue = useCallback(() => {
+  const handleContinue = () => {
     clearAllTimers();
     setShowWarning(false);
     resetIdleTimer();
-  }, [clearAllTimers, resetIdleTimer]);
+  };
 
   useEffect(() => {
     // Events to track user activity
@@ -97,7 +111,7 @@ export function IdleTimer({
 
     // Add event listeners
     events.forEach((event) => {
-      document.addEventListener(event, handleUserActivity);
+      document.addEventListener(event, handleUserActivity, { passive: true });
     });
 
     // Start initial timer
@@ -110,7 +124,9 @@ export function IdleTimer({
       });
       clearAllTimers();
     };
-  }, [handleUserActivity, resetIdleTimer, clearAllTimers]);
+    // Only re-run if timeouts change - not on every render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idleTimeout, warningTimeout]);
 
   // Lock body scroll when warning is shown
   useEffect(() => {

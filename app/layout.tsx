@@ -53,7 +53,7 @@ export default function RootLayout({
         <ErrorBoundary>
           <KioskProvider>
             {children}
-            <IdleTimer idleTimeout={90000} warningTimeout={30000} />
+            <IdleTimer idleTimeout={75000} warningTimeout={15000} />
           </KioskProvider>
         </ErrorBoundary>
       </body>
