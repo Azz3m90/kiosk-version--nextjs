@@ -32,6 +32,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Prevent theme transition flash on initial load
+              (function() {
+                document.documentElement.classList.add('no-transition');
+                window.addEventListener('load', function() {
+                  setTimeout(function() {
+                    document.documentElement.classList.remove('no-transition');
+                  }, 100);
+                });
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="font-sans" suppressHydrationWarning>
         <ErrorBoundary>
           <KioskProvider>

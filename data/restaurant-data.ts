@@ -158,7 +158,7 @@ export const restaurantData: RestaurantData = {
       description: 'Sizzling beef fajitas with peppers and onions',
       price: 19.99,
       category: 'mains',
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop&crop=center',
+      image: 'https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?w=400&h=300&fit=crop&crop=center',
     },
 
     // Desserts
@@ -270,7 +270,7 @@ export const restaurantData: RestaurantData = {
       description: 'Fresh homemade lemonade',
       price: 3.99,
       category: 'cold',
-      image: 'https://images.unsplash.com/photo-1523677011781-c91d1bbe2f9d?w=400&h=300&fit=crop&crop=center',
+      image: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&h=300&fit=crop&crop=center',
     },
     {
       id: 24,

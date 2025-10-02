@@ -19,14 +19,36 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
   const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [currentTheme, setCurrentTheme] = useState<Theme>('light');
 
-  // Apply theme to document
+  // Apply theme to document with smooth transition
   useEffect(() => {
     const root = document.documentElement;
+    
+    // Create and add transition overlay for smooth effect
+    const overlay = document.createElement('div');
+    overlay.className = 'theme-transition-overlay';
+    document.body.appendChild(overlay);
+    
+    // Add transition class to body for smoother effect
+    document.body.classList.add('theme-transitioning');
+    
+    // Apply theme change
     if (currentTheme === 'dark') {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
     }
+    
+    // Remove transition class after animation
+    setTimeout(() => {
+      document.body.classList.remove('theme-transitioning');
+    }, 500);
+    
+    // Remove overlay after animation
+    setTimeout(() => {
+      if (overlay.parentNode) {
+        overlay.remove();
+      }
+    }, 600);
   }, [currentTheme]);
 
   const addToCart = useCallback((item: CartItem) => {
