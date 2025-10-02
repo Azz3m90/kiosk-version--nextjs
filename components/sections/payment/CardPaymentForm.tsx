@@ -28,8 +28,8 @@ export function CardPaymentForm({
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-      <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         {t('card_details')}
       </h3>
       <div className="space-y-6">

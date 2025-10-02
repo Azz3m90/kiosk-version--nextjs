@@ -19,25 +19,25 @@ export function PaymentSummaryPanel({
 
   return (
     <div className="lg:col-span-1">
-      <div className="bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl shadow-lg p-8 sticky top-8 border-2 border-gray-100 dark:border-gray-700">
-        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+      <div className="bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-gray-800 dark:to-gray-800 rounded-2xl shadow-lg p-8 sticky top-8 border-2 border-gray-200 dark:border-gray-700">
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
           {t('order_summary')}
         </h3>
         <div className="space-y-3 mb-6">
           <div className="flex justify-between text-lg">
-            <span className="text-gray-700 dark:text-gray-300">{t('subtotal')}:</span>
-            <span className="font-semibold text-gray-800 dark:text-white">
+            <span className="text-gray-700 dark:text-gray-400 font-medium">{t('subtotal')}:</span>
+            <span className="font-semibold text-gray-900 dark:text-gray-100">
               {formatPrice(orderSummary.subtotal)}
             </span>
           </div>
           <div className="flex justify-between text-lg">
-            <span className="text-gray-700 dark:text-gray-300">{t('tax')} (21%):</span>
-            <span className="font-semibold text-gray-800 dark:text-white">
+            <span className="text-gray-700 dark:text-gray-400 font-medium">{t('tax')} (21%):</span>
+            <span className="font-semibold text-gray-900 dark:text-gray-100">
               {formatPrice(orderSummary.tax)}
             </span>
           </div>
           <div className="border-t-2 border-gray-300 dark:border-gray-600 pt-3 flex justify-between text-2xl">
-            <span className="font-bold text-gray-800 dark:text-white">{t('total')}:</span>
+            <span className="font-bold text-gray-900 dark:text-gray-100">{t('total')}:</span>
             <span className="font-bold text-primary-600 dark:text-primary-400">
               {formatPrice(orderSummary.total)}
             </span>

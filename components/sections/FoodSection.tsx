@@ -48,10 +48,10 @@ export function FoodSection() {
     <section className="animate-fade-in">
       {/* Section Header */}
       <div className="mb-8">
-        <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-3">
+        <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-3">
           {t('food_title')}
         </h2>
-        <p className="text-gray-600 text-base lg:text-lg">{t('food_subtitle')}</p>
+        <p className="text-gray-600 dark:text-gray-300 text-base lg:text-lg">{t('food_subtitle')}</p>
       </div>
 
       {/* Filter Bar */}

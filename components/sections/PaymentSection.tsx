@@ -75,10 +75,10 @@ export function PaymentSection() {
     <section className="animate-fade-in">
       {/* Section Header */}
       <div className="mb-8">
-        <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-2">
+        <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           {t('payment_title')}
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 text-lg">{t('payment_subtitle')}</p>
+        <p className="text-gray-600 dark:text-gray-400 text-lg font-medium">{t('payment_subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -13,12 +13,12 @@ export default function Home() {
   const { currentStep } = useKiosk();
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Sidebar with integrated Cart */}
       <Sidebar />
 
       {/* Main Content */}
-      <main className="flex-1 ml-[320px] overflow-y-auto">
+      <main className="flex-1 ml-[320px] overflow-y-auto bg-transparent">
         {/* Header */}
         <Header />
 
