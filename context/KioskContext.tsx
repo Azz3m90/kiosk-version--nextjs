@@ -30,6 +30,7 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
   }, [currentTheme]);
 
   const addToCart = useCallback((item: CartItem) => {
+    console.log('Adding item to cart:', item);
     setCart((prevCart) => {
       // Check if exact same item with same options exists
       const existingItemIndex = prevCart.findIndex(
@@ -43,11 +44,14 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
           ...newCart[existingItemIndex],
           quantity: newCart[existingItemIndex].quantity + item.quantity,
         };
+        console.log('Updated cart:', newCart);
         return newCart;
       }
 
       // Add new item
-      return [...prevCart, item];
+      const newCart = [...prevCart, item];
+      console.log('New cart:', newCart);
+      return newCart;
     });
   }, []);
 
