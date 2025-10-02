@@ -142,7 +142,7 @@ export const restaurantData: RestaurantData = {
       description: 'Creamy alfredo pasta with grilled chicken breast',
       price: 18.99,
       category: 'mains',
-      image: 'https://images.unsplash.com/photo-1621996346565-e3dbc6d2c5f7?w=400&h=300&fit=crop&crop=center',
+      image: 'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=400&h=300&fit=crop&crop=center',
     },
     {
       id: 9,
