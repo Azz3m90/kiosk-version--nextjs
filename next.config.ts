@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
     ],
   },
   reactStrictMode: true,
+  // Add this for Netlify deployment
+  trailingSlash: true,
 };
 
 export default nextConfig;
