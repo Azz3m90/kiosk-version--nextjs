@@ -120,12 +120,14 @@ export interface KioskContextType {
   cart: CartItem[];
   currentStep: Step;
   currentLanguage: Language;
+  currentTheme: Theme;
   addToCart: (item: CartItem) => void;
   removeFromCart: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
   navigateToStep: (step: Step) => void;
   changeLanguage: (lang: Language) => void;
+  toggleTheme: () => void;
   getOrderSummary: () => OrderSummary;
   resetKiosk: () => void;
 }

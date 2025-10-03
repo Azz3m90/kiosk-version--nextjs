@@ -3,7 +3,7 @@ import { RestaurantData } from '@/types';
 export const restaurantData: RestaurantData = {
   name: 'Delicious Bites',
   logo: '/assets/logo.svg',
-  
+
   foodItems: [
     // Appetizers
     {
@@ -512,7 +512,6 @@ export const restaurantData: RestaurantData = {
       check_before_adding: 'Vérifiez vos sélections avant d\'ajouter au panier',
       your_selections: 'Vos sélections',
       extras: 'Suppléments',
-      previous: 'Précédent',
       step: 'Étape',
       // Cart
       cart_empty: 'Votre panier est vide',
@@ -525,13 +524,6 @@ export const restaurantData: RestaurantData = {
       add: 'Ajouter',
       note: 'Note',
       orderSummary: 'Résumé de la commande',
-      // Item customization
-      customizable: 'Personnalisable',
-      customize_your_order: 'Personnalisez votre commande',
-      special_instructions: 'Instructions spéciales',
-      special_instructions_placeholder: 'Des demandes spéciales? (ex: sans oignons, fromage supplémentaire)',
-      add_to_cart: 'Ajouter au panier',
-      free: 'Gratuit',
       // Filters
       filter_by_category: 'Filtrer par catégorie',
       filter_by_price: 'Filtrer par prix',

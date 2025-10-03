@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatPrice } from '@/lib/utils';
-import { Plus, Minus, Star } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 import Image from 'next/image';
 import type { MenuItem as MenuItemType } from '@/types';
 import { ItemOptionsModal } from './ItemOptionsModal';
@@ -66,13 +66,6 @@ export function MenuItem({ item }: MenuItemProps) {
               {t(item.category)}
             </span>
           </div>
-          {/* Rating Badge */}
-          {item.rating && (
-            <div className="absolute top-4 right-4 bg-yellow-400 px-3 py-1 rounded-full flex items-center gap-1">
-              <Star className="w-4 h-4 fill-white text-white" />
-              <span className="text-sm font-bold text-white">{item.rating}</span>
-            </div>
-          )}
         </div>
 
         {/* Item Details */}
