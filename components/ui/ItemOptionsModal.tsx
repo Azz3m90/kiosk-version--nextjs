@@ -27,14 +27,14 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
     // Save original overflow style
     const originalOverflow = document.body.style.overflow;
     const originalPaddingRight = document.body.style.paddingRight;
-    
+
     // Get scrollbar width to prevent layout shift
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    
+
     // Lock scroll and hide scrollbar
     document.body.style.overflow = 'hidden';
     document.body.style.paddingRight = `${scrollbarWidth}px`;
-    
+
     // Cleanup: restore scroll when modal closes
     return () => {
       document.body.style.overflow = originalOverflow;
@@ -54,7 +54,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
   const toggleChoice = (optionName: string, choice: OptionChoice, optionType: 'radio' | 'checkbox') => {
     setSelectedChoices((prev) => {
       const currentChoices = prev[optionName] || [];
-      
+
       if (optionType === 'radio') {
         // For radio, replace with the new choice
         return { ...prev, [optionName]: [choice.name] };
@@ -72,7 +72,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
 
   const calculateTotalPrice = () => {
     let optionsPrice = 0;
-    
+
     if (item.options) {
       item.options.forEach((option) => {
         const selectedForOption = selectedChoices[option.name] || [];
@@ -84,7 +84,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
         });
       });
     }
-    
+
     return (item.price + optionsPrice) * quantity;
   };
 
@@ -117,7 +117,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
   const handleAddToCart = () => {
     let optionsPrice = 0;
     const selectedOptionsList: SelectedOption[] = [];
-    
+
     if (item.options) {
       item.options.forEach((option) => {
         const selectedForOption = selectedChoices[option.name] || [];
@@ -129,20 +129,20 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
               additionalPrice += choice.price;
             }
           });
-          
+
           selectedOptionsList.push({
             optionName: option.name,
             choices: selectedForOption,
             additionalPrice,
           });
-          
+
           optionsPrice += additionalPrice;
         }
       });
     }
-    
+
     const finalPrice = item.price + optionsPrice;
-    
+
     const cartItem = {
       id: `${item.id}-${Date.now()}`,
       menuItemId: item.id,
@@ -156,7 +156,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
       specialInstructions: specialInstructions || undefined,
       type: ('category' in item && ['appetizers', 'mains', 'desserts'].includes(item.category)) ? 'food' as const : 'drink' as const,
     };
-    
+
     addToCart(cartItem);
     onClose();
   };
@@ -174,7 +174,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
 
       {/* Progress Bar */}
       <div className="absolute top-0 left-0 right-0 h-2 bg-gray-200 dark:bg-gray-700">
-        <div 
+        <div
           className="h-full bg-gradient-to-r from-primary-500 to-primary-600 transition-all duration-500 ease-out"
           style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
         />
@@ -184,27 +184,24 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
       <div className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-3">
         {steps.map((step, index) => (
           <div key={step} className="flex items-center gap-3">
-            <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${
-              index < currentStep 
-                ? 'bg-primary-500 border-primary-500' 
-                : index === currentStep 
-                ? 'bg-white dark:bg-gray-800 border-primary-500 scale-110' 
-                : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'
-            }`}>
+            <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${index < currentStep
+                ? 'bg-primary-500 border-primary-500'
+                : index === currentStep
+                  ? 'bg-white dark:bg-gray-800 border-primary-500 scale-110'
+                  : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'
+              }`}>
               {index < currentStep ? (
                 <Check className="w-5 h-5 text-white" />
               ) : (
-                <span className={`text-sm font-bold ${
-                  index === currentStep ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-600'
-                }`}>
+                <span className={`text-sm font-bold ${index === currentStep ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-600'
+                  }`}>
                   {index + 1}
                 </span>
               )}
             </div>
             {index < steps.length - 1 && (
-              <div className={`w-12 h-1 rounded-full transition-all ${
-                index < currentStep ? 'bg-primary-500' : 'bg-gray-300 dark:bg-gray-600'
-              }`} />
+              <div className={`w-12 h-1 rounded-full transition-all ${index < currentStep ? 'bg-primary-500' : 'bg-gray-300 dark:bg-gray-600'
+                }`} />
             )}
           </div>
         ))}
@@ -213,7 +210,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
       {/* Main Content */}
       <div className="h-full pt-24 pb-32 overflow-y-auto">
         <div className="max-w-5xl mx-auto px-6">
-          
+
           {/* Step 1: Overview */}
           {steps[currentStep] === 'overview' && (
             <div className="animate-fade-in">
@@ -255,7 +252,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
                 {item.options?.map((option, optionIndex) => (
                   <div key={optionIndex} className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8">
                     <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">
-                      {option.name} 
+                      {option.name}
                       {option.required && <span className="text-red-500 ml-2">*</span>}
                       <span className="text-lg font-normal text-gray-500 dark:text-gray-400 ml-3">
                         {option.type === 'radio' ? t('select_one') : t('select_multiple')}
@@ -268,30 +265,27 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
                           <button
                             key={choiceIndex}
                             onClick={() => toggleChoice(option.name, choice, option.type)}
-                            className={`min-h-[80px] p-6 rounded-2xl border-4 transition-all text-left ${
-                              isSelected
+                            className={`min-h-[80px] p-6 rounded-2xl border-4 transition-all text-left ${isSelected
                                 ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 scale-[1.02] shadow-lg'
                                 : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 active:scale-95'
-                            }`}
+                              }`}
                           >
                             <div className="flex items-center justify-between gap-4">
                               <div className="flex items-center gap-4">
-                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                                  isSelected 
-                                    ? 'border-primary-500 bg-primary-500' 
+                                <div className={`w-6 h-6 ${option.type === 'radio' ? 'rounded-full' : 'rounded-md'} border-2 flex items-center justify-center ${isSelected
+                                    ? 'border-primary-500 bg-primary-500'
                                     : 'border-gray-400 dark:border-gray-600'
-                                }`}>
+                                  }`}>
                                   {isSelected && <Check className="w-4 h-4 text-white" />}
                                 </div>
                                 <span className="text-xl font-semibold text-gray-800 dark:text-white">
                                   {choice.name}
                                 </span>
                               </div>
-                              <span className={`text-xl font-bold whitespace-nowrap ${
-                                isSelected 
-                                  ? 'text-primary-600 dark:text-primary-400' 
+                              <span className={`text-xl font-bold whitespace-nowrap ${isSelected
+                                  ? 'text-primary-600 dark:text-primary-400'
                                   : 'text-gray-600 dark:text-gray-400'
-                              }`}>
+                                }`}>
                                 {choice.price > 0 ? `+${formatPrice(choice.price)}` : t('free')}
                               </span>
                             </div>
@@ -401,7 +395,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
                         {item.options.map((option) => {
                           const selectedForOption = selectedChoices[option.name] || [];
                           if (selectedForOption.length === 0) return null;
-                          
+
                           return (
                             <div key={option.name} className="flex justify-between items-start bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
                               <div>
@@ -476,11 +470,10 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
           <button
             onClick={handlePrevious}
             disabled={currentStep === 0}
-            className={`flex items-center gap-3 px-8 py-5 rounded-2xl text-xl font-bold transition-all ${
-              currentStep === 0
+            className={`flex items-center gap-3 px-8 py-5 rounded-2xl text-xl font-bold transition-all ${currentStep === 0
                 ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed'
                 : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-500 active:scale-95'
-            }`}
+              }`}
           >
             <ChevronLeft className="w-6 h-6" />
             {t('previous')}
@@ -499,11 +492,10 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
             <button
               onClick={handleNext}
               disabled={!canProceed()}
-              className={`flex items-center gap-3 px-8 py-5 rounded-2xl text-xl font-bold transition-all ${
-                !canProceed()
+              className={`flex items-center gap-3 px-8 py-5 rounded-2xl text-xl font-bold transition-all ${!canProceed()
                   ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-600 cursor-not-allowed'
                   : 'bg-primary-500 text-white hover:bg-primary-600 active:scale-95 shadow-lg'
-              }`}
+                }`}
             >
               {t('next')}
               <ChevronRight className="w-6 h-6" />

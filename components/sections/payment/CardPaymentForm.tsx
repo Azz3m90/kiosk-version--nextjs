@@ -28,13 +28,13 @@ export function CardPaymentForm({
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
-      <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 md:p-10 border-2 border-indigo-100 dark:border-gray-700">
+      <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">
         {t('card_details')}
       </h3>
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
-          <label className="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-lg md:text-xl font-bold text-gray-900 dark:text-gray-200 mb-3">
             {t('card_number')}
           </label>
           <input
@@ -45,16 +45,20 @@ export function CardPaymentForm({
               setCardNumber(value.slice(0, 16));
             }}
             placeholder="1234 5678 9012 3456"
-            className={`input ${errors.cardNumber ? 'border-red-500 dark:border-red-500' : ''}`}
+            className={`w-full px-6 py-5 md:py-6 text-xl md:text-2xl border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${errors.cardNumber
+                ? 'border-red-500 dark:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 dark:border-gray-600'
+              }`}
             maxLength={16}
+            aria-label={t('card_number')}
           />
           {errors.cardNumber && (
-            <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.cardNumber}</p>
+            <p className="text-red-500 dark:text-red-400 text-base md:text-lg mt-2 font-semibold">{errors.cardNumber}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
+          <label className="block text-lg md:text-xl font-bold text-gray-900 dark:text-gray-200 mb-3">
             {t('cardholder_name')}
           </label>
           <input
@@ -62,16 +66,20 @@ export function CardPaymentForm({
             value={cardName}
             onChange={(e) => setCardName(e.target.value)}
             placeholder="John Doe"
-            className={`input ${errors.cardName ? 'border-red-500 dark:border-red-500' : ''}`}
+            className={`w-full px-6 py-5 md:py-6 text-xl md:text-2xl border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${errors.cardName
+                ? 'border-red-500 dark:border-red-500 focus:ring-red-500'
+                : 'border-gray-300 dark:border-gray-600'
+              }`}
+            aria-label={t('cardholder_name')}
           />
           {errors.cardName && (
-            <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.cardName}</p>
+            <p className="text-red-500 dark:text-red-400 text-base md:text-lg mt-2 font-semibold">{errors.cardName}</p>
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-6">
           <div>
-            <label className="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-lg md:text-xl font-bold text-gray-900 dark:text-gray-200 mb-3">
               {t('expiry_date')}
             </label>
             <input
@@ -85,15 +93,19 @@ export function CardPaymentForm({
                 setExpiryDate(value);
               }}
               placeholder="MM/YY"
-              className={`input ${errors.expiryDate ? 'border-red-500 dark:border-red-500' : ''}`}
+              className={`w-full px-6 py-5 md:py-6 text-xl md:text-2xl border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${errors.expiryDate
+                  ? 'border-red-500 dark:border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 dark:border-gray-600'
+                }`}
               maxLength={5}
+              aria-label={t('expiry_date')}
             />
             {errors.expiryDate && (
-              <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.expiryDate}</p>
+              <p className="text-red-500 dark:text-red-400 text-base md:text-lg mt-2 font-semibold">{errors.expiryDate}</p>
             )}
           </div>
           <div>
-            <label className="block text-base font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-lg md:text-xl font-bold text-gray-900 dark:text-gray-200 mb-3">
               {t('cvv')}
             </label>
             <input
@@ -104,11 +116,15 @@ export function CardPaymentForm({
                 setCvv(value.slice(0, 4));
               }}
               placeholder="123"
-              className={`input ${errors.cvv ? 'border-red-500 dark:border-red-500' : ''}`}
+              className={`w-full px-6 py-5 md:py-6 text-xl md:text-2xl border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:border-indigo-500 transition-all bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 ${errors.cvv
+                  ? 'border-red-500 dark:border-red-500 focus:ring-red-500'
+                  : 'border-gray-300 dark:border-gray-600'
+                }`}
               maxLength={4}
+              aria-label={t('cvv')}
             />
             {errors.cvv && (
-              <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.cvv}</p>
+              <p className="text-red-500 dark:text-red-400 text-base md:text-lg mt-2 font-semibold">{errors.cvv}</p>
             )}
           </div>
         </div>
