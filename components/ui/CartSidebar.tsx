@@ -4,9 +4,12 @@ import { useState, useEffect } from 'react';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatPrice } from '@/lib/utils';
-import { ShoppingCart, Trash2, X } from 'lucide-react';
+import { ShoppingCart, Trash2, X, Edit2 } from 'lucide-react';
 import Image from 'next/image';
 import { ConfirmDialog } from './ConfirmDialog';
+import { ItemOptionsModal } from './ItemOptionsModal';
+import { restaurantData } from '@/data/restaurant-data';
+import type { CartItem, MenuItem } from '@/types';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -17,8 +20,16 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   const { cart, removeFromCart, getOrderSummary, navigateToStep } = useKiosk();
   const { t } = useTranslation();
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+  const [itemToEdit, setItemToEdit] = useState<{ cartItem: CartItem; menuItem: MenuItem } | null>(null);
 
   const orderSummary = getOrderSummary();
+
+  // Function to get menu item from restaurant data
+  const getMenuItem = (menuItemId: number): MenuItem | undefined => {
+    return [...restaurantData.foodItems, ...restaurantData.drinkItems].find(
+      item => item.id === menuItemId
+    );
+  };
 
   // Lock body scroll when sidebar is open
   useEffect(() => {
@@ -58,6 +69,13 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
     }
   };
 
+  const handleEditClick = (cartItem: CartItem) => {
+    const menuItem = getMenuItem(cartItem.menuItemId);
+    if (menuItem) {
+      setItemToEdit({ cartItem, menuItem });
+    }
+  };
+
   return (
     <>
       {/* Overlay */}
@@ -70,7 +88,7 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
 
       {/* Sidebar - Slides from RIGHT */}
       <div
-        className={`fixed top-0 right-0 h-screen w-[420px] bg-white dark:bg-gray-800 shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
+        className={`fixed top-0 right-0 h-screen w-[520px] bg-white dark:bg-gray-800 shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -132,14 +150,14 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                     </p>
                     {cartItem.selectedOptions &&
                       cartItem.selectedOptions.length > 0 && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
                           {cartItem.selectedOptions
                             .map((opt) => opt.optionName)
                             .join(', ')}
                         </p>
                       )}
                     {cartItem.specialInstructions && (
-                      <p className="text-sm text-amber-600 dark:text-amber-400 italic mt-1 truncate">
+                      <p className="text-sm text-amber-600 dark:text-amber-400 italic mt-1 line-clamp-2">
                         ✏️ {cartItem.specialInstructions}
                       </p>
                     )}
@@ -148,14 +166,26 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                     </p>
                   </div>
 
-                  {/* Remove Button - LARGER for kiosk */}
-                  <button
-                    onClick={() => handleRemoveClick(cartItem.id)}
-                    className="w-12 h-12 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors"
-                    aria-label="Remove item"
-                  >
-                    <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
-                  </button>
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-2 flex-shrink-0">
+                    {/* Edit Button */}
+                    <button
+                      onClick={() => handleEditClick(cartItem)}
+                      className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/50 rounded-xl flex items-center justify-center transition-colors"
+                      aria-label="Edit item"
+                    >
+                      <Edit2 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    </button>
+                    
+                    {/* Remove Button */}
+                    <button
+                      onClick={() => handleRemoveClick(cartItem.id)}
+                      className="w-12 h-12 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 rounded-xl flex items-center justify-center transition-colors"
+                      aria-label="Remove item"
+                    >
+                      <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -174,38 +204,47 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           variant="danger"
         />
 
-        {/* Footer - LARGER for kiosk */}
+        {/* Edit Item Modal */}
+        {itemToEdit && (
+          <ItemOptionsModal
+            item={itemToEdit.menuItem}
+            cartItemToEdit={itemToEdit.cartItem}
+            onClose={() => setItemToEdit(null)}
+          />
+        )}
+
+        {/* Footer - Compact */}
         {cart.length > 0 && (
-          <div className="border-t-2 border-gray-200 dark:border-gray-700 p-6 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 flex-shrink-0">
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between text-lg text-gray-700 dark:text-gray-300">
+          <div className="border-t-2 border-gray-200 dark:border-gray-700 p-4 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 flex-shrink-0">
+            <div className="space-y-2 mb-4">
+              <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                 <span className="font-medium">{t('subtotal')}:</span>
                 <span className="font-semibold">
                   {formatPrice(orderSummary.subtotal)}
                 </span>
               </div>
-              <div className="flex justify-between text-lg text-gray-700 dark:text-gray-300">
+              <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                 <span className="font-medium">{t('tax')} (21%):</span>
                 <span className="font-semibold">
                   {formatPrice(orderSummary.tax)}
                 </span>
               </div>
-              <div className="flex justify-between text-2xl font-bold text-gray-900 dark:text-white pt-3 border-t-2 border-gray-300 dark:border-gray-600">
+              <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white pt-2 border-t border-gray-300 dark:border-gray-600">
                 <span>{t('total')}:</span>
-                <span className="text-primary-600 dark:text-primary-400 text-3xl">
+                <span className="text-primary-600 dark:text-primary-400 text-xl">
                   {formatPrice(orderSummary.total)}
                 </span>
               </div>
             </div>
             <button
               onClick={handleCheckout}
-              className="w-full py-5 px-6 bg-gradient-to-r from-green-500 to-green-600 text-white text-xl font-bold rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-200"
+              className="w-full py-3.5 px-5 bg-gradient-to-r from-green-500 to-green-600 text-white text-base font-bold rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-200"
             >
               {t('proceed_to_checkout')}
             </button>
             <button
               onClick={onClose}
-              className="w-full py-3 px-6 mt-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-lg font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              className="w-full py-2.5 px-5 mt-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
               {t('continue_shopping')}
             </button>

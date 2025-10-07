@@ -1,14 +1,18 @@
 // Core Types
-export type Language = 'en' | 'fr' | 'nl';
+export type Language = 'en' | 'fr' | 'nl' | 'de' | 'es' | 'it';
 
 export type Theme = 'light' | 'dark';
+
+export type ViewMode = 'grid' | 'list';
 
 export type FoodCategory = 'appetizers' | 'mains' | 'desserts';
 export type DrinkCategory = 'hot' | 'cold' | 'alcoholic';
 
 export type PaymentMethod = 'card' | 'cash' | 'digital';
 
-export type Step = 'food' | 'drinks' | 'review' | 'payment';
+export type OrderType = 'takeaway' | 'eatin';
+
+export type Step = 'welcome' | 'orderType' | 'food' | 'drinks' | 'review' | 'payment';
 
 // Option Types
 export interface OptionChoice {
@@ -120,12 +124,19 @@ export interface KioskContextType {
   cart: CartItem[];
   currentStep: Step;
   currentLanguage: Language;
+  currentTheme: Theme;
+  viewMode: ViewMode;
+  orderType: OrderType | null;
   addToCart: (item: CartItem) => void;
   removeFromCart: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
+  updateCartItem: (itemId: string, updatedItem: CartItem) => void;
   clearCart: () => void;
   navigateToStep: (step: Step) => void;
   changeLanguage: (lang: Language) => void;
+  setOrderType: (type: OrderType) => void;
+  toggleTheme: () => void;
+  toggleViewMode: () => void;
   getOrderSummary: () => OrderSummary;
   resetKiosk: () => void;
 }

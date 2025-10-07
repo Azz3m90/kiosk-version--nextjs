@@ -57,9 +57,9 @@ export function NavigationButtons({
   };
 
   return (
-    <div className="flex justify-between items-center gap-4">
+    <div className="flex justify-start items-center gap-4 mt-8">
       {/* Previous Button */}
-      {showPrevious && hasPrevious ? (
+      {showPrevious && hasPrevious && (
         <button
           onClick={handlePrevious}
           className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95"
@@ -79,8 +79,6 @@ export function NavigationButtons({
           </svg>
           <span>{previousLabel || t('previous')}</span>
         </button>
-      ) : (
-        <div></div>
       )}
 
       {/* Next Button */}

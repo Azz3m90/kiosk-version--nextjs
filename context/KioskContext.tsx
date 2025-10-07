@@ -6,8 +6,10 @@ import type {
   Step,
   Language,
   Theme,
+  ViewMode,
   KioskContextType,
   OrderSummary,
+  OrderType,
 } from '@/types';
 import { TAX_RATE } from '@/data/restaurant-data';
 import { ThemeTransition } from '@/components/ui/ThemeTransition';
@@ -16,10 +18,36 @@ const KioskContext = createContext<KioskContextType | undefined>(undefined);
 
 export function KioskProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [currentStep, setCurrentStep] = useState<Step>('food');
+  const [currentStep, setCurrentStep] = useState<Step>('welcome');
   const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [currentTheme, setCurrentTheme] = useState<Theme>('light');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [orderType, setOrderType] = useState<OrderType | null>(null);
   const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
+
+  // DISABLED: Load preferences from localStorage on mount
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined') {
+  //     const savedLanguage = localStorage.getItem('kiosk_language') as Language;
+  //     const savedOrderType = localStorage.getItem('kiosk_orderType') as OrderType;
+  //     
+  //     console.log('Loading from localStorage:', { savedLanguage, savedOrderType });
+  //     
+  //     if (savedLanguage) {
+  //       setCurrentLanguage(savedLanguage);
+  //     }
+  //     
+  //     if (savedOrderType) {
+  //       setOrderType(savedOrderType);
+  //     }
+  //     
+  //     // Skip to food section if both are saved
+  //     if (savedLanguage && savedOrderType) {
+  //       setCurrentStep('food');
+  //       console.log('Skipping to food section with saved preferences');
+  //     }
+  //   }
+  // }, []);
 
   // Apply theme to document with cloud fog transition
   useEffect(() => {
@@ -90,6 +118,14 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
     );
   }, [removeFromCart]);
 
+  const updateCartItem = useCallback((itemId: string, updatedItem: CartItem) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === itemId ? { ...updatedItem, id: itemId } : item
+      )
+    );
+  }, []);
+
   const clearCart = useCallback(() => {
     setCart([]);
   }, []);
@@ -112,10 +148,28 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
 
   const changeLanguage = useCallback((lang: Language) => {
     setCurrentLanguage(lang);
+    // DISABLED: Persist to localStorage
+    // if (typeof window !== 'undefined') {
+    //   localStorage.setItem('kiosk_language', lang);
+    //   console.log('Saved language to localStorage:', lang);
+    // }
+  }, []);
+
+  const handleSetOrderType = useCallback((type: OrderType) => {
+    setOrderType(type);
+    // DISABLED: Persist to localStorage
+    // if (typeof window !== 'undefined') {
+    //   localStorage.setItem('kiosk_orderType', type);
+    //   console.log('Saved order type to localStorage:', type);
+    // }
   }, []);
 
   const toggleTheme = useCallback(() => {
     setCurrentTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  }, []);
+
+  const toggleViewMode = useCallback(() => {
+    setViewMode((prev) => (prev === 'grid' ? 'list' : 'grid'));
   }, []);
 
   const getOrderSummary = useCallback((): OrderSummary => {
@@ -137,9 +191,18 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
 
   const resetKiosk = useCallback(() => {
     setCart([]);
-    setCurrentStep('food');
+    setCurrentStep('welcome');
     setCurrentLanguage('en');
     setCurrentTheme('light');
+    setViewMode('grid');
+    setOrderType(null);
+    
+    // DISABLED: Clear localStorage when resetting
+    // if (typeof window !== 'undefined') {
+    //   localStorage.removeItem('kiosk_language');
+    //   localStorage.removeItem('kiosk_orderType');
+    // }
+    
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
@@ -149,13 +212,18 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
       currentStep,
       currentLanguage,
       currentTheme,
+      viewMode,
+      orderType,
       addToCart,
       removeFromCart,
       updateQuantity,
+      updateCartItem,
       clearCart,
       navigateToStep,
       changeLanguage,
+      setOrderType: handleSetOrderType,
       toggleTheme,
+      toggleViewMode,
       getOrderSummary,
       resetKiosk,
     }),
@@ -164,13 +232,18 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
       currentStep,
       currentLanguage,
       currentTheme,
+      viewMode,
+      orderType,
       addToCart,
       removeFromCart,
       updateQuantity,
+      updateCartItem,
       clearCart,
       navigateToStep,
       changeLanguage,
+      handleSetOrderType,
       toggleTheme,
+      toggleViewMode,
       getOrderSummary,
       resetKiosk,
     ]

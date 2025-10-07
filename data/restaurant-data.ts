@@ -403,6 +403,7 @@ export const restaurantData: RestaurantData = {
       special_instructions: 'Special Instructions',
       special_instructions_placeholder: 'Any special requests? (e.g., no onions, extra cheese)',
       add_to_cart: 'Add to Cart',
+      update_item: 'Update Item',
       free: 'Free',
       // Filters
       filter_by_category: 'Filter by Category',
@@ -426,6 +427,15 @@ export const restaurantData: RestaurantData = {
       complete_payment: 'Complete Payment',
       payment_success: 'Payment Successful!',
       payment_success_message: 'Thank you for your order. Redirecting...',
+      // Order Type
+      eat_in: 'Eat In',
+      eat_in_description: 'Dine in our restaurant',
+      take_away: 'Take Away',
+      take_away_description: 'Order to go',
+      select_order_type: 'How would you like your order?',
+      select_order_type_subtitle: 'Choose your dining preference',
+      tap_to_select: 'Tap to select',
+      order_type_note: 'You can change this later if needed',
     },
     fr: {
       food: 'Nourriture',
@@ -501,6 +511,7 @@ export const restaurantData: RestaurantData = {
       special_instructions: 'Instructions spéciales',
       special_instructions_placeholder: 'Des demandes spéciales? (ex: sans oignons, fromage supplémentaire)',
       add_to_cart: 'Ajouter au panier',
+      update_item: 'Mettre à jour l\'article',
       free: 'Gratuit',
       base_price: 'Prix de base',
       select_options_below: 'Sélectionnez vos options ci-dessous',
@@ -554,6 +565,15 @@ export const restaurantData: RestaurantData = {
       complete_payment: 'Finaliser le paiement',
       payment_success: 'Paiement réussi!',
       payment_success_message: 'Merci pour votre commande. Redirection...',
+      // Order Type
+      eat_in: 'Sur place',
+      eat_in_description: 'Manger dans notre restaurant',
+      take_away: 'À emporter',
+      take_away_description: 'Commander à emporter',
+      select_order_type: 'Comment souhaitez-vous votre commande?',
+      select_order_type_subtitle: 'Choisissez votre préférence',
+      tap_to_select: 'Appuyez pour sélectionner',
+      order_type_note: 'Vous pouvez modifier cela plus tard si nécessaire',
     },
     nl: {
       food: 'Eten',
@@ -639,6 +659,7 @@ export const restaurantData: RestaurantData = {
       special_instructions: 'Speciale instructies',
       special_instructions_placeholder: 'Speciale verzoeken? (bijv. zonder uien, extra kaas)',
       add_to_cart: 'Toevoegen aan winkelwagen',
+      update_item: 'Item bijwerken',
       free: 'Gratis',
       // Filters
       filter_by_category: 'Filter op categorie',
@@ -662,6 +683,15 @@ export const restaurantData: RestaurantData = {
       complete_payment: 'Betaling voltooien',
       payment_success: 'Betaling geslaagd!',
       payment_success_message: 'Bedankt voor je bestelling. Doorverwijzen...',
+      // Order Type
+      eat_in: 'Hier eten',
+      eat_in_description: 'Dineren in ons restaurant',
+      take_away: 'Meenemen',
+      take_away_description: 'Bestelling meenemen',
+      select_order_type: 'Hoe wilt u uw bestelling?',
+      select_order_type_subtitle: 'Kies uw voorkeursoptie',
+      tap_to_select: 'Tik om te selecteren',
+      order_type_note: 'U kunt dit later indien nodig wijzigen',
     },
     de: {
       food: 'Essen',
@@ -747,6 +777,7 @@ export const restaurantData: RestaurantData = {
       special_instructions: 'Besondere Anweisungen',
       special_instructions_placeholder: 'Besondere Wünsche? (z.B. ohne Zwiebeln, extra Käse)',
       add_to_cart: 'In den Warenkorb',
+      update_item: 'Artikel aktualisieren',
       free: 'Kostenlos',
       // Filters
       filter_by_category: 'Nach Kategorie filtern',
@@ -770,6 +801,15 @@ export const restaurantData: RestaurantData = {
       complete_payment: 'Zahlung abschließen',
       payment_success: 'Zahlung erfolgreich!',
       payment_success_message: 'Vielen Dank für Ihre Bestellung. Weiterleitung...',
+      // Order Type
+      eat_in: 'Im Restaurant essen',
+      eat_in_description: 'In unserem Restaurant speisen',
+      take_away: 'Zum Mitnehmen',
+      take_away_description: 'Bestellung zum Mitnehmen',
+      select_order_type: 'Wie möchten Sie Ihre Bestellung?',
+      select_order_type_subtitle: 'Wählen Sie Ihre Präferenz',
+      tap_to_select: 'Tippen Sie zum Auswählen',
+      order_type_note: 'Sie können dies später bei Bedarf ändern',
     },
     es: {
       food: 'Comida',
@@ -855,6 +895,7 @@ export const restaurantData: RestaurantData = {
       special_instructions: 'Instrucciones especiales',
       special_instructions_placeholder: '¿Solicitudes especiales? (ej: sin cebolla, queso extra)',
       add_to_cart: 'Añadir al carrito',
+      update_item: 'Actualizar artículo',
       free: 'Gratis',
       // Filters
       filter_by_category: 'Filtrar por categoría',
@@ -878,6 +919,15 @@ export const restaurantData: RestaurantData = {
       complete_payment: 'Completar pago',
       payment_success: '¡Pago exitoso!',
       payment_success_message: 'Gracias por tu pedido. Redirigiendo...',
+      // Order Type
+      eat_in: 'Comer aquí',
+      eat_in_description: 'Cenar en nuestro restaurante',
+      take_away: 'Para llevar',
+      take_away_description: 'Pedido para llevar',
+      select_order_type: '¿Cómo deseas tu pedido?',
+      select_order_type_subtitle: 'Elige tu preferencia',
+      tap_to_select: 'Toca para seleccionar',
+      order_type_note: 'Puedes cambiar esto más tarde si es necesario',
     },
     it: {
       food: 'Cibo',
@@ -963,6 +1013,7 @@ export const restaurantData: RestaurantData = {
       special_instructions: 'Istruzioni speciali',
       special_instructions_placeholder: 'Richieste speciali? (es: senza cipolle, formaggio extra)',
       add_to_cart: 'Aggiungi al carrello',
+      update_item: 'Aggiorna articolo',
       free: 'Gratis',
       // Filters
       filter_by_category: 'Filtra per categoria',
@@ -986,6 +1037,15 @@ export const restaurantData: RestaurantData = {
       complete_payment: 'Completa pagamento',
       payment_success: 'Pagamento riuscito!',
       payment_success_message: 'Grazie per il tuo ordine. Reindirizzamento...',
+      // Order Type
+      eat_in: 'Mangiare qui',
+      eat_in_description: 'Cenare nel nostro ristorante',
+      take_away: 'Da asporto',
+      take_away_description: 'Ordine da asporto',
+      select_order_type: 'Come vuoi il tuo ordine?',
+      select_order_type_subtitle: 'Scegli la tua preferenza',
+      tap_to_select: 'Tocca per selezionare',
+      order_type_note: 'Puoi modificarlo più tardi se necessario',
     },
   },
 };

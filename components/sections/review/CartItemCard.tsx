@@ -1,11 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatPrice } from '@/lib/utils';
-import { Trash2, Plus, Minus, CheckCircle } from 'lucide-react';
+import { Trash2, Plus, Minus, CheckCircle, Edit2 } from 'lucide-react';
 import Image from 'next/image';
-import type { CartItem } from '@/types';
+import { ItemOptionsModal } from '@/components/ui/ItemOptionsModal';
+import { restaurantData } from '@/data/restaurant-data';
+import type { CartItem, MenuItem } from '@/types';
 
 interface CartItemCardProps {
   cartItem: CartItem;
@@ -14,9 +17,24 @@ interface CartItemCardProps {
 export function CartItemCard({ cartItem }: CartItemCardProps) {
   const { updateQuantity, removeFromCart } = useKiosk();
   const { t } = useTranslation();
+  const [itemToEdit, setItemToEdit] = useState<{ cartItem: CartItem; menuItem: MenuItem } | null>(null);
 
   // Debug: Log cart item to console
   console.log('CartItemCard rendering:', cartItem);
+
+  // Function to get menu item from restaurant data
+  const getMenuItem = (menuItemId: number): MenuItem | undefined => {
+    return [...restaurantData.foodItems, ...restaurantData.drinkItems].find(
+      item => item.id === menuItemId
+    );
+  };
+
+  const handleEditClick = () => {
+    const menuItem = getMenuItem(cartItem.menuItemId);
+    if (menuItem) {
+      setItemToEdit({ cartItem, menuItem });
+    }
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-3 border border-gray-200 dark:border-gray-700">
@@ -65,7 +83,7 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
         </div>
       )}
 
-      {/* Controls Row: Quantity + Remove */}
+      {/* Controls Row: Quantity + Edit + Remove */}
       <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
         {/* Quantity Controls */}
         <div className="flex items-center gap-2">
@@ -88,15 +106,38 @@ export function CartItemCard({ cartItem }: CartItemCardProps) {
           </button>
         </div>
 
-        {/* Remove Button */}
-        <button
-          onClick={() => removeFromCart(cartItem.id)}
-          className="px-4 py-2 lg:px-6 lg:py-2.5 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm lg:text-base font-semibold transition-all flex items-center gap-2"
-          aria-label="Remove item"
-        >
-          Remove
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2">
+          {/* Edit Button */}
+          <button
+            onClick={handleEditClick}
+            className="px-3 py-2 lg:px-4 lg:py-2.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white text-sm lg:text-base font-semibold transition-all flex items-center gap-2"
+            aria-label="Edit item"
+          >
+            <Edit2 className="w-4 h-4 lg:w-5 lg:h-5" />
+            Edit
+          </button>
+
+          {/* Remove Button */}
+          <button
+            onClick={() => removeFromCart(cartItem.id)}
+            className="px-3 py-2 lg:px-4 lg:py-2.5 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm lg:text-base font-semibold transition-all flex items-center gap-2"
+            aria-label="Remove item"
+          >
+            <Trash2 className="w-4 h-4 lg:w-5 lg:h-5" />
+            Remove
+          </button>
+        </div>
       </div>
+
+      {/* Edit Item Modal */}
+      {itemToEdit && (
+        <ItemOptionsModal
+          item={itemToEdit.menuItem}
+          cartItemToEdit={itemToEdit.cartItem}
+          onClose={() => setItemToEdit(null)}
+        />
+      )}
     </div>
   );
 }

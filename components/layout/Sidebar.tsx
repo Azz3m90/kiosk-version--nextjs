@@ -1,13 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
-import { Utensils, Coffee, Receipt, CreditCard, ShoppingCart, ChevronRight } from 'lucide-react';
+import { Utensils, Coffee, Receipt, CreditCard, ChevronRight } from 'lucide-react';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { restaurantData } from '@/data/restaurant-data';
 import { formatPrice } from '@/lib/utils';
-import { CartSidebar } from '@/components/ui/CartSidebar';
 import type { Step } from '@/types';
 
 const steps: { id: Step; icon: typeof Utensils }[] = [
@@ -21,7 +19,6 @@ export function Sidebar() {
   const { currentStep, navigateToStep, getOrderSummary, cart } = useKiosk();
   const { t } = useTranslation();
   const summary = getOrderSummary();
-  const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Check if cart has any items (required before accessing review/payment)
   const hasItems = cart.length > 0;
@@ -104,34 +101,6 @@ export function Sidebar() {
               );
             })}
           </nav>
-
-          {/* View Cart Button */}
-          <button
-            onClick={() => setIsCartOpen(true)}
-            className={`
-              w-full flex items-center gap-4 px-5 py-5 rounded-xl transition-all duration-200 min-h-[70px]
-              ${cart.length > 0 
-                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg hover:shadow-xl hover:scale-105 animate-pulse-slow'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-2 border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }
-            `}
-            aria-label="View cart"
-          >
-            <ShoppingCart className="w-7 h-7 flex-shrink-0" />
-            <div className="flex-1 text-left">
-              <div className="font-bold text-lg">{t('viewCart')}</div>
-              {cart.length > 0 && (
-                <div className="text-sm opacity-90">
-                  {summary.itemCount} {t('items')} - {formatPrice(summary.total)}
-                </div>
-              )}
-            </div>
-            {cart.length > 0 && (
-              <div className="bg-white/20 px-3 py-1 rounded-full">
-                <span className="font-bold text-lg">{cart.length}</span>
-              </div>
-            )}
-          </button>
         </div>
 
         {/* Order Summary - Pinned at Bottom */}
@@ -166,9 +135,6 @@ export function Sidebar() {
           </div>
         )}
       </aside>
-
-      {/* Cart Sidebar */}
-      <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 }

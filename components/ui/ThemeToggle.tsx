@@ -5,63 +5,30 @@ import { Sun, Moon } from 'lucide-react';
 
 export function ThemeToggle() {
   const { currentTheme, toggleTheme } = useKiosk();
+  const isDark = currentTheme === 'dark';
 
   return (
     <button
       onClick={toggleTheme}
-      className="relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all duration-500 min-h-[44px] min-w-[44px] bg-white/95 backdrop-blur-sm shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 group overflow-hidden"
-      aria-label={`Switch to ${currentTheme === 'light' ? 'dark' : 'light'} mode`}
-      title={`Switch to ${currentTheme === 'light' ? 'dark' : 'light'} mode`}
+      className="relative flex items-center justify-between bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 rounded-full p-1 w-[70px] h-[36px] transition-all duration-300 shadow-inner hover:shadow-lg active:scale-95 touch-manipulation"
+      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+      title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
-      {/* Animated Background with Glow Effect */}
-      <div 
-        className={`absolute inset-0 rounded-xl transition-all duration-700 ease-in-out ${
-          currentTheme === 'light'
-            ? 'bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-500'
-            : 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600'
+      {/* Sliding Toggle Circle */}
+      <div
+        className={`absolute top-1 left-1 w-7 h-7 rounded-full shadow-md transition-all duration-300 ease-in-out flex items-center justify-center ${
+          isDark 
+            ? 'translate-x-[34px] bg-gradient-to-br from-slate-300 to-slate-400' 
+            : 'translate-x-0 bg-gradient-to-br from-yellow-300 to-yellow-500'
         }`}
-      />
-      
-      {/* Animated Shimmer Effect */}
-      <div 
-        className={`absolute inset-0 rounded-xl opacity-50 transition-all duration-700 ${
-          currentTheme === 'light'
-            ? 'bg-gradient-to-r from-transparent via-white to-transparent'
-            : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'
-        } bg-[length:200%_100%] animate-shimmer`}
-      />
-      
-      {/* Icon Container with Smooth Rotation */}
-      <div className="relative flex items-center justify-center w-full">
-        {/* Sun Icon with Rays Animation */}
-        <div
-          className={`absolute transition-all duration-700 ease-in-out ${
-            currentTheme === 'light'
-              ? 'opacity-100 rotate-0 scale-100'
-              : 'opacity-0 -rotate-180 scale-50'
-          }`}
-        >
-          <Sun className="w-5 h-5 text-white drop-shadow-lg animate-pulse-slow" />
-        </div>
-        
-        {/* Moon Icon with Glow */}
-        <div
-          className={`absolute transition-all duration-700 ease-in-out ${
-            currentTheme === 'dark'
-              ? 'opacity-100 rotate-0 scale-100'
-              : 'opacity-0 rotate-180 scale-50'
-          }`}
-        >
-          <Moon className="w-5 h-5 text-white drop-shadow-lg" />
-        </div>
+      >
+        {/* Active Icon with Glow */}
+        {!isDark ? (
+          <Sun className="w-4 h-4 text-yellow-700 drop-shadow-md" strokeWidth={3} />
+        ) : (
+          <Moon className="w-4 h-4 text-slate-700 drop-shadow-md" strokeWidth={3} />
+        )}
       </div>
-      
-      {/* Optional Label with Fade Effect */}
-      <span className={`relative hidden xl:inline text-white text-sm ml-1 font-bold drop-shadow-lg transition-all duration-500 ${
-        currentTheme === 'light' ? 'opacity-100' : 'opacity-90'
-      }`}>
-        {currentTheme === 'light' ? 'Light' : 'Dark'}
-      </span>
     </button>
   );
 }

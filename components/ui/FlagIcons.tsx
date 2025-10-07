@@ -71,9 +71,65 @@ export function DutchFlag({ width = 40, height = 30, className = '' }: FlagIconP
   );
 }
 
+// German Flag
+export function GermanFlag({ width = 40, height = 30, className = '' }: FlagIconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 60 30"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Deutsch"
+    >
+      <rect width="60" height="10" fill="#000000" />
+      <rect y="10" width="60" height="10" fill="#DD0000" />
+      <rect y="20" width="60" height="10" fill="#FFCE00" />
+    </svg>
+  );
+}
+
+// Spanish Flag
+export function SpanishFlag({ width = 40, height = 30, className = '' }: FlagIconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 60 30"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Español"
+    >
+      <rect width="60" height="30" fill="#AA151B" />
+      <rect y="7.5" width="60" height="15" fill="#F1BF00" />
+    </svg>
+  );
+}
+
+// Italian Flag
+export function ItalianFlag({ width = 40, height = 30, className = '' }: FlagIconProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 60 30"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Italiano"
+    >
+      <rect width="20" height="30" fill="#009246" />
+      <rect x="20" width="20" height="30" fill="#FFFFFF" />
+      <rect x="40" width="20" height="30" fill="#CE2B37" />
+    </svg>
+  );
+}
+
 // Export a mapping object for easy access
 export const FlagIcons = {
   en: UKFlag,
   fr: FrenchFlag,
   nl: DutchFlag,
+  de: GermanFlag,
+  es: SpanishFlag,
+  it: ItalianFlag,
 } as const;

@@ -6,20 +6,33 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { formatPrice } from '@/lib/utils';
 import { X, Plus, Minus, ShoppingCart, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import Image from 'next/image';
-import type { MenuItem as MenuItemType, ItemOption, OptionChoice, SelectedOption } from '@/types';
+import type { MenuItem as MenuItemType, ItemOption, OptionChoice, SelectedOption, CartItem } from '@/types';
 
 interface ItemOptionsModalProps {
   item: MenuItemType;
   initialQuantity?: number;
+  cartItemToEdit?: CartItem; // For edit mode
   onClose: () => void;
 }
 
-export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOptionsModalProps) {
-  const { addToCart } = useKiosk();
+export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, onClose }: ItemOptionsModalProps) {
+  const { addToCart, updateCartItem } = useKiosk();
   const { t } = useTranslation();
-  const [selectedChoices, setSelectedChoices] = useState<Record<string, string[]>>({});
-  const [specialInstructions, setSpecialInstructions] = useState('');
-  const [quantity, setQuantity] = useState(initialQuantity);
+  const isEditMode = !!cartItemToEdit;
+  
+  // Initialize state from cartItemToEdit if in edit mode
+  const [selectedChoices, setSelectedChoices] = useState<Record<string, string[]>>(() => {
+    if (cartItemToEdit?.selectedOptions) {
+      const initialChoices: Record<string, string[]> = {};
+      cartItemToEdit.selectedOptions.forEach(opt => {
+        initialChoices[opt.optionName] = opt.choices;
+      });
+      return initialChoices;
+    }
+    return {};
+  });
+  const [specialInstructions, setSpecialInstructions] = useState(cartItemToEdit?.specialInstructions || '');
+  const [quantity, setQuantity] = useState(cartItemToEdit?.quantity || initialQuantity);
   const [currentStep, setCurrentStep] = useState(0);
 
   // Lock body scroll when modal is open
@@ -144,7 +157,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
     const finalPrice = item.price + optionsPrice;
     
     const cartItem = {
-      id: `${item.id}-${Date.now()}`,
+      id: isEditMode ? cartItemToEdit.id : `${item.id}-${Date.now()}`,
       menuItemId: item.id,
       name: item.name,
       description: item.description,
@@ -157,7 +170,11 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
       type: ('category' in item && ['appetizers', 'mains', 'desserts'].includes(item.category)) ? 'food' as const : 'drink' as const,
     };
     
-    addToCart(cartItem);
+    if (isEditMode) {
+      updateCartItem(cartItemToEdit.id, cartItem);
+    } else {
+      addToCart(cartItem);
+    }
     onClose();
   };
 
@@ -268,32 +285,32 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
                           <button
                             key={choiceIndex}
                             onClick={() => toggleChoice(option.name, choice, option.type)}
-                            className={`min-h-[80px] p-6 rounded-2xl border-4 transition-all text-left ${
+                            className={`min-h-[60px] p-3.5 rounded-2xl border-4 transition-all text-left ${
                               isSelected
                                 ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 scale-[1.02] shadow-lg'
                                 : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 active:scale-95'
                             }`}
                           >
-                            <div className="flex items-center justify-between gap-4">
-                              <div className="flex items-center gap-4">
-                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                                  isSelected 
-                                    ? 'border-primary-500 bg-primary-500' 
-                                    : 'border-gray-400 dark:border-gray-600'
-                                }`}>
-                                  {isSelected && <Check className="w-4 h-4 text-white" />}
-                                </div>
-                                <span className="text-xl font-semibold text-gray-800 dark:text-white">
+                            <div className="flex items-center gap-2.5">
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                isSelected 
+                                  ? 'border-primary-500 bg-primary-500' 
+                                  : 'border-gray-400 dark:border-gray-600'
+                              }`}>
+                                {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
+                              </div>
+                              <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
+                                <span className="text-xs font-semibold text-gray-800 dark:text-white leading-tight flex-1 min-w-0">
                                   {choice.name}
                                 </span>
+                                <span className={`text-xs font-bold whitespace-nowrap flex-shrink-0 ${
+                                  isSelected 
+                                    ? 'text-primary-600 dark:text-primary-400' 
+                                    : 'text-gray-600 dark:text-gray-400'
+                                }`}>
+                                  {choice.price > 0 ? `+${formatPrice(choice.price)}` : t('free')}
+                                </span>
                               </div>
-                              <span className={`text-xl font-bold whitespace-nowrap ${
-                                isSelected 
-                                  ? 'text-primary-600 dark:text-primary-400' 
-                                  : 'text-gray-600 dark:text-gray-400'
-                              }`}>
-                                {choice.price > 0 ? `+${formatPrice(choice.price)}` : t('free')}
-                              </span>
                             </div>
                           </button>
                         );
@@ -471,25 +488,25 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
 
       {/* Navigation Buttons */}
       <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700 p-6 shadow-2xl">
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-6">
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
           {/* Previous Button */}
           <button
             onClick={handlePrevious}
             disabled={currentStep === 0}
-            className={`flex items-center gap-3 px-8 py-5 rounded-2xl text-xl font-bold transition-all ${
+            className={`flex items-center gap-2 px-5 py-4 rounded-2xl text-lg font-bold transition-all ${
               currentStep === 0
                 ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed'
                 : 'bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-500 active:scale-95'
             }`}
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5" />
             {t('previous')}
           </button>
 
           {/* Step Info */}
-          <div className="text-center">
-            <div className="text-sm text-gray-500 dark:text-gray-400">{t('step')}</div>
-            <div className="text-2xl font-bold text-gray-800 dark:text-white">
+          <div className="text-center flex-shrink-0">
+            <div className="text-xs text-gray-500 dark:text-gray-400">{t('step')}</div>
+            <div className="text-xl font-bold text-gray-800 dark:text-white">
               {currentStep + 1} / {steps.length}
             </div>
           </div>
@@ -499,22 +516,22 @@ export function ItemOptionsModal({ item, initialQuantity = 1, onClose }: ItemOpt
             <button
               onClick={handleNext}
               disabled={!canProceed()}
-              className={`flex items-center gap-3 px-8 py-5 rounded-2xl text-xl font-bold transition-all ${
+              className={`flex items-center gap-2 px-5 py-4 rounded-2xl text-lg font-bold transition-all ${
                 !canProceed()
                   ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-600 cursor-not-allowed'
                   : 'bg-primary-500 text-white hover:bg-primary-600 active:scale-95 shadow-lg'
               }`}
             >
               {t('next')}
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           ) : (
             <button
               onClick={handleAddToCart}
-              className="flex items-center gap-4 px-10 py-5 rounded-2xl text-xl font-bold bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 active:scale-95 transition-all shadow-xl"
+              className="flex items-center gap-3 px-8 py-4 rounded-2xl text-lg font-bold bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 active:scale-95 transition-all shadow-xl"
             >
-              <ShoppingCart className="w-7 h-7" />
-              {t('add_to_cart')} - {formatPrice(calculateTotalPrice())}
+              <ShoppingCart className="w-6 h-6" />
+              {isEditMode ? t('update_item') : t('add_to_cart')} - {formatPrice(calculateTotalPrice())}
             </button>
           )}
         </div>
