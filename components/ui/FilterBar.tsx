@@ -231,15 +231,18 @@ export function FilterBar({
               onMouseDown={(e) => e.stopPropagation()}
               onMouseMove={(e) => e.stopPropagation()}
               onMouseUp={(e) => e.stopPropagation()}
-              className="absolute left-2 right-2 appearance-none bg-transparent pointer-events-none
+              className="absolute left-2 right-2 appearance-none bg-transparent cursor-pointer
                        [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
-                       [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary-500
+                       [&::-webkit-slider-thumb]:bg-gray-200 dark:[&::-webkit-slider-thumb]:bg-gray-600 
+                       [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-gray-300 dark:[&::-webkit-slider-thumb]:border-gray-500
                        [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-md 
-                       [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto
-                       [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white 
-                       [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary-500
+                       [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-all
+                       [&::-webkit-slider-thumb]:hover:scale-110
+                       [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 
+                       [&::-moz-range-thumb]:bg-gray-200 dark:[&::-moz-range-thumb]:bg-gray-600 
+                       [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-gray-300 dark:[&::-moz-range-thumb]:border-gray-500
                        [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:shadow-md 
-                       [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto"
+                       [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:transition-all"
               style={{ zIndex: priceRange[0] > maxPrice - (maxPrice - minPrice) / 4 ? 5 : 3 }}
             />
             {/* Max range slider */}
@@ -260,15 +263,18 @@ export function FilterBar({
               onMouseDown={(e) => e.stopPropagation()}
               onMouseMove={(e) => e.stopPropagation()}
               onMouseUp={(e) => e.stopPropagation()}
-              className="absolute left-2 right-2 appearance-none bg-transparent pointer-events-none
+              className="absolute left-2 right-2 appearance-none bg-transparent cursor-pointer
                        [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
-                       [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary-500
+                       [&::-webkit-slider-thumb]:bg-gray-200 dark:[&::-webkit-slider-thumb]:bg-gray-600 
+                       [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-gray-300 dark:[&::-webkit-slider-thumb]:border-gray-500
                        [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-md 
-                       [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto
-                       [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white 
-                       [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary-500
+                       [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-all
+                       [&::-webkit-slider-thumb]:hover:scale-110
+                       [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 
+                       [&::-moz-range-thumb]:bg-gray-200 dark:[&::-moz-range-thumb]:bg-gray-600 
+                       [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-gray-300 dark:[&::-moz-range-thumb]:border-gray-500
                        [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:shadow-md 
-                       [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto"
+                       [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:transition-all"
               style={{ zIndex: 4 }}
             />
           </div>

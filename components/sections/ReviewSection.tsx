@@ -36,9 +36,9 @@ export function ReviewSection() {
           </div>
         </div>
 
-        {/* RIGHT PANEL - Order Summary (Scrollable on Mobile, Sticky on Desktop) */}
-        <div className="lg:w-80 lg:border-l lg:border-gray-200 lg:dark:border-gray-700 flex-shrink-0 overflow-y-auto">
-          <div className="lg:sticky lg:top-0 p-3 lg:p-4">
+        {/* RIGHT PANEL - Order Summary (Fixed on Desktop) */}
+        <div className="lg:w-80 xl:w-96 lg:border-l lg:border-gray-200 lg:dark:border-gray-700 flex-shrink-0">
+          <div className="h-full p-3 lg:p-4">
             <OrderSummaryPanel />
           </div>
         </div>

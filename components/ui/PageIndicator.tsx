@@ -7,14 +7,16 @@ import { UtensilsCrossed, Wine, ClipboardCheck, CreditCard } from 'lucide-react'
 
 const stepOrder: Step[] = ['food', 'drinks', 'review', 'payment'];
 
-const stepIcons = {
+type NavigableStep = 'food' | 'drinks' | 'review' | 'payment';
+
+const stepIcons: Record<NavigableStep, typeof UtensilsCrossed> = {
   food: UtensilsCrossed,
   drinks: Wine,
   review: ClipboardCheck,
   payment: CreditCard,
 };
 
-const stepTranslationKeys = {
+const stepTranslationKeys: Record<NavigableStep, string> = {
   food: 'food_title',
   drinks: 'drinks_title',
   review: 'review_order',
@@ -37,22 +39,22 @@ export function PageIndicator() {
   };
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-4 py-3 rounded-full shadow-xl border border-gray-200 dark:border-gray-700">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-4 py-3 rounded-full shadow-lg border border-gray-200 dark:border-gray-700">
       {stepOrder.map((step, index) => {
-        const Icon = stepIcons[step];
+        const Icon = stepIcons[step as NavigableStep];
         const isActive = index === currentIndex;
         const isPast = index < currentIndex;
-        const translationKey = stepTranslationKeys[step];
+        const translationKey = stepTranslationKeys[step as NavigableStep];
 
         return (
           <button
             key={step}
             onClick={() => handleStepClick(step)}
             className={`
-              relative flex items-center justify-center transition-all duration-500 touch-manipulation
+              relative flex items-center justify-center transition-all duration-300 touch-manipulation
               ${isActive 
-                ? 'w-auto px-5 h-12 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 rounded-full scale-125 shadow-2xl animate-pulse-slow' 
-                : 'w-10 h-10 rounded-full hover:scale-110'
+                ? 'w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full scale-110 shadow-lg' 
+                : 'w-12 h-12 rounded-full hover:scale-110 active:scale-105'
               }
               ${isPast && !isActive
                 ? 'bg-green-100 dark:bg-green-900/30 hover:bg-green-200 dark:hover:bg-green-900/50'
@@ -60,48 +62,33 @@ export function PageIndicator() {
               }
             `}
             style={isActive ? {
-              boxShadow: '0 0 30px rgba(59, 130, 246, 0.6), 0 10px 40px rgba(0, 0, 0, 0.3)',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
+              boxShadow: '0 0 15px rgba(59, 130, 246, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2)',
             } : undefined}
             title={t(translationKey)}
             aria-label={t(translationKey)}
             aria-current={isActive ? 'page' : undefined}
           >
-            {/* Animated ring for active page */}
-            {isActive && (
-              <div className="absolute inset-0 rounded-full border-2 border-white/40 animate-ping-slow" 
-                style={{ animationDuration: '2s' }}
-              />
-            )}
-
             {/* Icon */}
             <Icon
               className={`
-                transition-all duration-500
+                transition-all duration-300
                 ${isActive 
-                  ? 'w-6 h-6 text-white drop-shadow-lg' 
-                  : 'w-5 h-5'
+                  ? 'w-7 h-7 text-white drop-shadow' 
+                  : 'w-6 h-6'
                 }
                 ${isPast && !isActive
                   ? 'text-green-600 dark:text-green-400'
                   : !isActive && 'text-gray-600 dark:text-gray-400'
                 }
               `}
-              strokeWidth={isActive ? 3 : 2.5}
+              strokeWidth={isActive ? 2.5 : 2}
             />
-
-            {/* Active page label */}
-            {isActive && (
-              <span className="ml-2.5 text-base font-extrabold text-white whitespace-nowrap drop-shadow-md tracking-wide">
-                {t(translationKey)}
-              </span>
-            )}
 
             {/* Checkmark for completed steps */}
             {isPast && !isActive && (
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+              <div className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center shadow-sm">
                 <svg
-                  className="w-3 h-3 text-white"
+                  className="w-2.5 h-2.5 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -119,9 +106,9 @@ export function PageIndicator() {
         );
       })}
 
-      {/* Swipe hint text - subtle */}
+      {/* Swipe hint text - Subtle */}
       <div className="ml-2 pl-2 border-l border-gray-300 dark:border-gray-600">
-        <p className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+        <p className="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
           ← {t('swipe')} →
         </p>
       </div>

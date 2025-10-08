@@ -32,6 +32,20 @@
     transition-property: opacity, filter;
   }
 
+  /* Prevent image dragging, selection, and copying for kiosk */
+  img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: auto;
+  }
+
   /* Prevent transition on page load */
   .no-transition * {
     transition-duration: 0s !important;
@@ -553,6 +567,57 @@
   .badge-error {
     @apply bg-red-100 text-red-800;
     @apply dark:bg-red-900/50 dark:text-red-200;
+  }
+
+  /* ===== ENHANCED NAVIGATION ANIMATIONS ===== */
+  /* Pulse animation for navigation buttons */
+  .animate-nav-pulse {
+    animation: nav-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes nav-pulse {
+    0%, 100% {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    50% {
+      box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+  }
+
+  /* Slide in animation for navigation hint */
+  .animate-slide-bounce-left {
+    animation: slide-bounce-left 2s ease-in-out infinite;
+  }
+
+  @keyframes slide-bounce-left {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-8px);
+    }
+  }
+
+  .animate-slide-bounce-right {
+    animation: slide-bounce-right 2s ease-in-out infinite;
+  }
+
+  @keyframes slide-bounce-right {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(8px);
+    }
+  }
+
+  /* Glow effect for prominent navigation */
+  .nav-glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.3);
+  }
+
+  .nav-glow:hover {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.7), 0 0 60px rgba(59, 130, 246, 0.5);
   }
 }
 

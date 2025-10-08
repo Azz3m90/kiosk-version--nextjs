@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { Step } from '@/types';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface SwipeNavigationProps {
   children: React.ReactNode;
@@ -22,12 +23,12 @@ export function SwipeNavigation({ children }: SwipeNavigationProps) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [swipeStartTime, setSwipeStartTime] = useState<number>(0);
 
-  // Minimum swipe distance (in px) to trigger navigation
-  const minSwipeDistance = 50;
+  // Minimum swipe distance (in px) to trigger navigation - REDUCED for easier navigation
+  const minSwipeDistance = 30;
   // Velocity threshold (px/ms) for fast swipes - allows shorter distance swipes
-  const minSwipeVelocity = 0.3;
-  // Guaranteed swipe distance - ANY swipe over this ALWAYS works
-  const guaranteedSwipeDistance = 50;
+  const minSwipeVelocity = 0.25;
+  // Guaranteed swipe distance - ANY swipe over this ALWAYS works - REDUCED
+  const guaranteedSwipeDistance = 35;
 
   const currentIndex = stepOrder.indexOf(currentStep);
   const canSwipeLeft = currentIndex < stepOrder.length - 1;
@@ -248,6 +249,43 @@ export function SwipeNavigation({ children }: SwipeNavigationProps) {
     }
   };
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && canSwipeRight) {
+        navigateToStep(stepOrder[currentIndex - 1]);
+      } else if (e.key === 'ArrowRight' && canSwipeLeft) {
+        const nextStep = stepOrder[currentIndex + 1];
+        if ((nextStep === 'review' || nextStep === 'payment') && cart.length === 0) {
+          showToast(t('cart_empty_warning'), 'warning');
+          return;
+        }
+        navigateToStep(nextStep);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentIndex, canSwipeLeft, canSwipeRight, cart, navigateToStep, showToast, t]);
+
+  // Handle navigation button clicks
+  const handlePrevious = () => {
+    if (canSwipeRight) {
+      navigateToStep(stepOrder[currentIndex - 1]);
+    }
+  };
+
+  const handleNext = () => {
+    if (canSwipeLeft) {
+      const nextStep = stepOrder[currentIndex + 1];
+      if ((nextStep === 'review' || nextStep === 'payment') && cart.length === 0) {
+        showToast(t('cart_empty_warning'), 'warning');
+        return;
+      }
+      navigateToStep(nextStep);
+    }
+  };
+
   return (
     <div
       ref={containerRef}
@@ -279,61 +317,6 @@ export function SwipeNavigation({ children }: SwipeNavigationProps) {
       >
         {children}
       </div>
-
-      {/* Swipe indicator overlay - improved visibility and feedback */}
-      {isDragging && Math.abs(dragOffset) > 10 && (
-        <div className="fixed inset-0 pointer-events-none z-30 flex items-center justify-between px-4 sm:px-8">
-          {/* Left arrow - shown when dragging right */}
-          {dragOffset > 10 && canSwipeRight && (
-            <div 
-              className="bg-gradient-to-r from-blue-500/40 to-blue-600/30 backdrop-blur-lg rounded-full p-6 sm:p-8 shadow-2xl border-2 border-blue-400/50 transition-all duration-200"
-              style={{
-                opacity: Math.min(Math.abs(dragOffset) / 60, 1),
-                transform: `scale(${0.7 + Math.min(Math.abs(dragOffset) / 150, 0.4)})`,
-              }}
-            >
-              <svg
-                className="w-12 h-12 sm:w-16 sm:h-16 text-white drop-shadow-2xl"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={3.5}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </div>
-          )}
-
-          {/* Right arrow - shown when dragging left */}
-          {dragOffset < -10 && canSwipeLeft && (
-            <div 
-              className="ml-auto bg-gradient-to-l from-blue-500/40 to-blue-600/30 backdrop-blur-lg rounded-full p-6 sm:p-8 shadow-2xl border-2 border-blue-400/50 transition-all duration-200"
-              style={{
-                opacity: Math.min(Math.abs(dragOffset) / 60, 1),
-                transform: `scale(${0.7 + Math.min(Math.abs(dragOffset) / 150, 0.4)})`,
-              }}
-            >
-              <svg
-                className="w-12 h-12 sm:w-16 sm:h-16 text-white drop-shadow-2xl"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={3.5}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Hint arrows - subtle indicators when not dragging */}
       {!isDragging && (
@@ -374,6 +357,33 @@ export function SwipeNavigation({ children }: SwipeNavigationProps) {
           )}
         </div>
       )}
+
+      {/* Fixed Navigation Buttons - Subtle and unobtrusive */}
+      <div className="fixed inset-y-0 left-0 right-0 z-40 flex items-center justify-between pointer-events-none px-2 sm:px-4">
+        {/* Previous Button */}
+        {canSwipeRight && (
+          <button
+            onClick={handlePrevious}
+            className="pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 bg-gray-800/20 hover:bg-blue-500/70 dark:bg-gray-200/20 dark:hover:bg-blue-500/70 text-gray-700 hover:text-white dark:text-gray-300 dark:hover:text-white rounded-full shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center backdrop-blur-sm border border-gray-300/30 hover:border-blue-400/50 dark:border-gray-700/30 dark:hover:border-blue-400/50 group opacity-40 hover:opacity-100"
+            aria-label={t('previous')}
+            title={t('previous')}
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:-translate-x-0.5" strokeWidth={2.5} />
+          </button>
+        )}
+
+        {/* Next Button */}
+        {canSwipeLeft && (
+          <button
+            onClick={handleNext}
+            className="pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 bg-gray-800/20 hover:bg-blue-500/70 dark:bg-gray-200/20 dark:hover:bg-blue-500/70 text-gray-700 hover:text-white dark:text-gray-300 dark:hover:text-white rounded-full shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center backdrop-blur-sm border border-gray-300/30 hover:border-blue-400/50 dark:border-gray-700/30 dark:hover:border-blue-400/50 group opacity-40 hover:opacity-100"
+            aria-label={t('next')}
+            title={t('next')}
+          >
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:translate-x-0.5" strokeWidth={2.5} />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -70,15 +70,10 @@ export function MenuItem({ item, viewMode = 'grid', gridColumns }: MenuItemProps
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-300"
                   sizes="112px"
+                  draggable={false}
+                  onDragStart={(e) => e.preventDefault()}
                 />
               </div>
-              {/* Rating Badge */}
-              {item.rating && (
-                <div className="absolute top-4 right-4 bg-yellow-400 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                  <Star className="w-3 h-3 fill-white text-white" />
-                  <span className="text-xs font-bold text-white">{item.rating}</span>
-                </div>
-              )}
             </div>
 
             {/* Item Details - Centered */}
@@ -151,6 +146,8 @@ export function MenuItem({ item, viewMode = 'grid', gridColumns }: MenuItemProps
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-300"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
               />
               {/* Category Badge */}
               <div className="absolute top-4 left-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-3 py-1 rounded-full">
@@ -158,13 +155,6 @@ export function MenuItem({ item, viewMode = 'grid', gridColumns }: MenuItemProps
                   {t(item.category)}
                 </span>
               </div>
-              {/* Rating Badge */}
-              {item.rating && (
-                <div className="absolute top-4 right-4 bg-yellow-400 px-3 py-1 rounded-full flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-white text-white" />
-                  <span className="text-sm font-bold text-white">{item.rating}</span>
-                </div>
-              )}
             </div>
 
             {/* Item Details */}
@@ -236,6 +226,8 @@ export function MenuItem({ item, viewMode = 'grid', gridColumns }: MenuItemProps
               fill
               className="object-cover group-hover:scale-110 transition-transform duration-300"
               sizes="(max-width: 768px) 180px, 208px"
+              draggable={false}
+              onDragStart={(e) => e.preventDefault()}
             />
             {/* Category Badge */}
             <div className="absolute top-4 left-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
@@ -243,13 +235,6 @@ export function MenuItem({ item, viewMode = 'grid', gridColumns }: MenuItemProps
                 {t(item.category)}
               </span>
             </div>
-            {/* Rating Badge */}
-            {item.rating && (
-              <div className="absolute bottom-4 left-4 bg-yellow-400 px-3 py-1.5 rounded-full flex items-center gap-1 shadow-md">
-                <Star className="w-4 h-4 fill-white text-white" />
-                <span className="text-sm font-bold text-white">{item.rating}</span>
-              </div>
-            )}
           </div>
 
           {/* Item Details - More spacious layout */}

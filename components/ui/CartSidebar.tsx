@@ -137,6 +137,8 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                       fill
                       className="object-cover"
                       sizes="96px"
+                      draggable={false}
+                      onDragStart={(e) => e.preventDefault()}
                     />
                   </div>
 

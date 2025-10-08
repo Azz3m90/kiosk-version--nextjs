@@ -95,7 +95,7 @@ export function DrinksSection() {
   }, [drinkItems]);
 
   return (
-    <section className="animate-fade-in">
+    <section className="animate-fade-in pb-28">
       {/* Compact Section Header */}
       <div className="mb-4">
         <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white">

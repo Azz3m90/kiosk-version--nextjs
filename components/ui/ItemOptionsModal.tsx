@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { formatPrice } from '@/lib/utils';
@@ -34,6 +35,13 @@ export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, on
   const [specialInstructions, setSpecialInstructions] = useState(cartItemToEdit?.specialInstructions || '');
   const [quantity, setQuantity] = useState(cartItemToEdit?.quantity || initialQuantity);
   const [currentStep, setCurrentStep] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  // Handle mounting for portal (SSR safety)
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -178,8 +186,11 @@ export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, on
     onClose();
   };
 
-  return (
-    <div className="fixed inset-0 bg-gradient-to-br from-primary-50 to-white dark:from-gray-900 dark:to-gray-800 z-50 animate-fade-in">
+  // Don't render on server or before mount
+  if (!mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 bg-gradient-to-br from-primary-50 to-white dark:from-gray-900 dark:to-gray-800 z-[100] animate-fade-in">
       {/* Close Button */}
       <button
         onClick={onClose}
@@ -246,6 +257,8 @@ export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, on
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 1024px"
                   priority
+                  draggable={false}
+                  onDragStart={(e) => e.preventDefault()}
                 />
               </div>
               <div className="text-center mt-8">
@@ -402,6 +415,8 @@ export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, on
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 768px"
+                    draggable={false}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </div>
 
@@ -536,6 +551,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, on
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
