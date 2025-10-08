@@ -318,8 +318,8 @@ export function SwipeNavigation({ children }: SwipeNavigationProps) {
         {children}
       </div>
 
-      {/* Hint arrows - subtle indicators when not dragging */}
-      {!isDragging && (
+      {/* Hint arrows - subtle indicators when not dragging, hidden on review/payment pages */}
+      {!isDragging && currentStep !== 'review' && currentStep !== 'payment' && (
         <div className="fixed inset-0 pointer-events-none z-20 flex items-center justify-between px-4 opacity-20 dark:opacity-10">
           {canSwipeRight && (
             <div className="animate-pulse">
@@ -358,24 +358,25 @@ export function SwipeNavigation({ children }: SwipeNavigationProps) {
         </div>
       )}
 
-      {/* Fixed Navigation Buttons - Subtle and unobtrusive */}
-      <div className="fixed inset-y-0 left-0 right-0 z-40 flex items-center justify-between pointer-events-none px-2 sm:px-4">
-        {/* Previous Button */}
-        {canSwipeRight && (
-          <button
-            onClick={handlePrevious}
-            className="pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 bg-gray-800/20 hover:bg-blue-500/70 dark:bg-gray-200/20 dark:hover:bg-blue-500/70 text-gray-700 hover:text-white dark:text-gray-300 dark:hover:text-white rounded-full shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center backdrop-blur-sm border border-gray-300/30 hover:border-blue-400/50 dark:border-gray-700/30 dark:hover:border-blue-400/50 group opacity-40 hover:opacity-100"
-            aria-label={t('previous')}
-            title={t('previous')}
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:-translate-x-0.5" strokeWidth={2.5} />
-          </button>
-        )}
+      {/* Fixed Navigation Buttons - Hidden on review/payment pages to avoid covering modals */}
+      {currentStep !== 'review' && currentStep !== 'payment' && (
+        <div className="fixed inset-y-0 left-0 right-0 z-40 flex items-center justify-between pointer-events-none px-2 sm:px-4">
+          {/* Previous Button */}
+          {canSwipeRight && (
+            <button
+              onClick={handlePrevious}
+              className="pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 bg-gray-800/20 hover:bg-blue-500/70 dark:bg-gray-200/20 dark:hover:bg-blue-500/70 text-gray-700 hover:text-white dark:text-gray-300 dark:hover:text-white rounded-full shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center backdrop-blur-sm border border-gray-300/30 hover:border-blue-400/50 dark:border-gray-700/30 dark:hover:border-blue-400/50 group opacity-40 hover:opacity-100"
+              aria-label={t('previous')}
+              title={t('previous')}
+            >
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:-translate-x-0.5" strokeWidth={2.5} />
+            </button>
+          )}
 
-        {/* Next Button */}
-        {canSwipeLeft && (
-          <button
-            onClick={handleNext}
+          {/* Next Button */}
+          {canSwipeLeft && (
+            <button
+              onClick={handleNext}
             className="pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 bg-gray-800/20 hover:bg-blue-500/70 dark:bg-gray-200/20 dark:hover:bg-blue-500/70 text-gray-700 hover:text-white dark:text-gray-300 dark:hover:text-white rounded-full shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center backdrop-blur-sm border border-gray-300/30 hover:border-blue-400/50 dark:border-gray-700/30 dark:hover:border-blue-400/50 group opacity-40 hover:opacity-100"
             aria-label={t('next')}
             title={t('next')}
@@ -383,7 +384,8 @@ export function SwipeNavigation({ children }: SwipeNavigationProps) {
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:translate-x-0.5" strokeWidth={2.5} />
           </button>
         )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

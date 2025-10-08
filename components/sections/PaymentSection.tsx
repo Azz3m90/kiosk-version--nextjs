@@ -72,7 +72,7 @@ export function PaymentSection() {
   }
 
   return (
-    <section className="flex flex-col h-[calc(100vh-180px)] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl shadow-lg animate-fade-in">
+    <section className="flex flex-col h-[calc(100vh-180px)] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl shadow-lg animate-fade-in pb-28">
       {/* Section Header */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 px-6 rounded-t-2xl flex-shrink-0">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">

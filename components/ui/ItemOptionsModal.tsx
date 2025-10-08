@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -20,6 +20,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, on
   const { addToCart, updateCartItem } = useKiosk();
   const { t } = useTranslation();
   const isEditMode = !!cartItemToEdit;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   // Initialize state from cartItemToEdit if in edit mode
   const [selectedChoices, setSelectedChoices] = useState<Record<string, string[]>>(() => {
@@ -42,6 +43,13 @@ export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, on
     setMounted(true);
     return () => setMounted(false);
   }, []);
+
+  // Scroll to top when modal opens or step changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentStep]);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -239,7 +247,7 @@ export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, on
       </div>
 
       {/* Main Content */}
-      <div className="h-full pt-24 pb-32 overflow-y-auto">
+      <div ref={scrollContainerRef} className="h-full pt-24 pb-32 overflow-y-auto">
         <div className="max-w-5xl mx-auto px-6">
           
           {/* Step 1: Overview */}
@@ -305,13 +313,27 @@ export function ItemOptionsModal({ item, initialQuantity = 1, cartItemToEdit, on
                             }`}
                           >
                             <div className="flex items-center gap-2.5">
-                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                                isSelected 
-                                  ? 'border-primary-500 bg-primary-500' 
-                                  : 'border-gray-400 dark:border-gray-600'
-                              }`}>
-                                {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
-                              </div>
+                              {/* Radio button indicator */}
+                              {option.type === 'radio' ? (
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                  isSelected 
+                                    ? 'border-primary-500' 
+                                    : 'border-gray-400 dark:border-gray-600'
+                                }`}>
+                                  {isSelected && (
+                                    <div className="w-3 h-3 rounded-full bg-primary-500" />
+                                  )}
+                                </div>
+                              ) : (
+                                /* Checkbox indicator */
+                                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                                  isSelected 
+                                    ? 'border-primary-500 bg-primary-500' 
+                                    : 'border-gray-400 dark:border-gray-600'
+                                }`}>
+                                  {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
+                                </div>
+                              )}
                               <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
                                 <span className="text-xs font-semibold text-gray-800 dark:text-white leading-tight flex-1 min-w-0">
                                   {choice.name}
