@@ -7,12 +7,15 @@ import type {
   Language,
   Theme,
   ViewMode,
+  GridColumns,
   KioskContextType,
   OrderSummary,
   OrderType,
+  ToastMessage,
 } from '@/types';
 import { TAX_RATE } from '@/data/restaurant-data';
 import { ThemeTransition } from '@/components/ui/ThemeTransition';
+import { Toast } from '@/components/ui/Toast';
 
 const KioskContext = createContext<KioskContextType | undefined>(undefined);
 
@@ -22,8 +25,10 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
   const [currentLanguage, setCurrentLanguage] = useState<Language>('en');
   const [currentTheme, setCurrentTheme] = useState<Theme>('light');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [gridColumns, setGridColumns] = useState<GridColumns>(3);
   const [orderType, setOrderType] = useState<OrderType | null>(null);
   const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
+  const [toast, setToast] = useState<ToastMessage | null>(null);
 
   // DISABLED: Load preferences from localStorage on mount
   // useEffect(() => {
@@ -131,20 +136,11 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const navigateToStep = useCallback((step: Step) => {
-    // Enforce rule: must have items in cart before navigating to review/payment
-    if (step === 'review' || step === 'payment') {
-      const hasItems = cart.length > 0;
-      if (!hasItems) {
-        // Prevent navigation if no items in cart
-        console.warn('Cannot navigate to', step, '- Cart is empty');
-        return;
-      }
-    }
-    
+    // Allow navigation to all pages (cart requirement removed for swipe navigation)
     setCurrentStep(step);
     // Scroll to top when changing steps
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [cart]);
+  }, []);
 
   const changeLanguage = useCallback((lang: Language) => {
     setCurrentLanguage(lang);
@@ -172,6 +168,10 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
     setViewMode((prev) => (prev === 'grid' ? 'list' : 'grid'));
   }, []);
 
+  const handleSetGridColumns = useCallback((columns: GridColumns) => {
+    setGridColumns(columns);
+  }, []);
+
   const getOrderSummary = useCallback((): OrderSummary => {
     const subtotal = cart.reduce(
       (sum, item) => sum + item.finalPrice * item.quantity,
@@ -189,13 +189,23 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
     };
   }, [cart]);
 
+  const showToast = useCallback((message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info') => {
+    setToast({ message, type });
+  }, []);
+
+  const hideToast = useCallback(() => {
+    setToast(null);
+  }, []);
+
   const resetKiosk = useCallback(() => {
     setCart([]);
     setCurrentStep('welcome');
     setCurrentLanguage('en');
     setCurrentTheme('light');
     setViewMode('grid');
+    setGridColumns(3);
     setOrderType(null);
+    setToast(null);
     
     // DISABLED: Clear localStorage when resetting
     // if (typeof window !== 'undefined') {
@@ -213,7 +223,9 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
       currentLanguage,
       currentTheme,
       viewMode,
+      gridColumns,
       orderType,
+      toast,
       addToCart,
       removeFromCart,
       updateQuantity,
@@ -224,8 +236,11 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
       setOrderType: handleSetOrderType,
       toggleTheme,
       toggleViewMode,
+      setGridColumns: handleSetGridColumns,
       getOrderSummary,
       resetKiosk,
+      showToast,
+      hideToast,
     }),
     [
       cart,
@@ -233,7 +248,9 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
       currentLanguage,
       currentTheme,
       viewMode,
+      gridColumns,
       orderType,
+      toast,
       addToCart,
       removeFromCart,
       updateQuantity,
@@ -244,8 +261,11 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
       handleSetOrderType,
       toggleTheme,
       toggleViewMode,
+      handleSetGridColumns,
       getOrderSummary,
       resetKiosk,
+      showToast,
+      hideToast,
     ]
   );
 
@@ -253,6 +273,13 @@ export function KioskProvider({ children }: { children: React.ReactNode }) {
     <KioskContext.Provider value={value}>
       {children}
       <ThemeTransition isTransitioning={isThemeTransitioning} theme={currentTheme} />
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={hideToast}
+        />
+      )}
     </KioskContext.Provider>
   );
 }

@@ -12,14 +12,17 @@ import { ItemOptionsModal } from './ItemOptionsModal';
 interface MenuItemProps {
   item: MenuItemType;
   viewMode?: 'grid' | 'list';
+  gridColumns?: number;
 }
 
-export function MenuItem({ item, viewMode = 'grid' }: MenuItemProps) {
-  const { addToCart, viewMode: contextViewMode } = useKiosk();
+export function MenuItem({ item, viewMode = 'grid', gridColumns }: MenuItemProps) {
+  const { addToCart, viewMode: contextViewMode, gridColumns: contextGridColumns } = useKiosk();
   const { t } = useTranslation();
   
   // Use the prop if provided, otherwise use the context value
   const currentViewMode = viewMode || contextViewMode;
+  const currentGridColumns = gridColumns ?? contextGridColumns;
+  const isCompactMode = currentGridColumns >= 4;
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
@@ -55,132 +58,54 @@ export function MenuItem({ item, viewMode = 'grid' }: MenuItemProps) {
   return (
     <>
       {currentViewMode === 'grid' ? (
-        // Grid View
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group flex flex-col h-full">
-          {/* Item Image */}
-          <div className="relative h-48 lg:h-56 overflow-hidden">
-            <Image
-              src={item.image}
-              alt={item.name}
-              fill
-              className="object-cover group-hover:scale-110 transition-transform duration-300"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-3 py-1 rounded-full">
-              <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                {t(item.category)}
-              </span>
-            </div>
-            {/* Rating Badge */}
-            {item.rating && (
-              <div className="absolute top-4 right-4 bg-yellow-400 px-3 py-1 rounded-full flex items-center gap-1">
-                <Star className="w-4 h-4 fill-white text-white" />
-                <span className="text-sm font-bold text-white">{item.rating}</span>
+        isCompactMode ? (
+          // Compact Centered Mode (4-5 columns)
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group flex flex-col h-full">
+            {/* Item Image - Circular for compact mode */}
+            <div className="relative pt-6 pb-3 flex justify-center">
+              <div className="relative w-28 h-28 rounded-full overflow-hidden ring-4 ring-gray-100 dark:ring-gray-700">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
+                  sizes="112px"
+                />
               </div>
-            )}
-          </div>
-
-          {/* Item Details */}
-          <div className="p-6">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 line-clamp-1">
-              {item.name}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2 h-10">
-              {item.description}
-            </p>
-
-            {/* Price */}
-            <div className="mb-4">
-              <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                {formatPrice(item.price)}
-              </span>
+              {/* Rating Badge */}
+              {item.rating && (
+                <div className="absolute top-4 right-4 bg-yellow-400 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                  <Star className="w-3 h-3 fill-white text-white" />
+                  <span className="text-xs font-bold text-white">{item.rating}</span>
+                </div>
+              )}
             </div>
 
-            {/* Quantity Controls and Add Button */}
-            <div className="flex items-center gap-2 w-full">
-              {/* Quantity Controls - Kiosk Optimized */}
-              <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-xl px-1.5 py-1 flex-shrink-0">
-                <button
-                  onClick={decrementQuantity}
-                  className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm hover:shadow-md"
-                  aria-label="Decrease quantity"
-                >
-                  <Minus className="w-5 h-5 text-gray-700 dark:text-gray-300 stroke-[3]" />
-                </button>
-                <span className="text-lg font-bold text-gray-800 dark:text-gray-100 w-8 text-center">
-                  {quantity}
+            {/* Item Details - Centered */}
+            <div className="px-3 pb-4 flex flex-col items-center text-center flex-grow">
+              {/* Category Badge */}
+              <div className="mb-2">
+                <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                  {t(item.category)}
                 </span>
-                <button
-                  onClick={incrementQuantity}
-                  className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm hover:shadow-md"
-                  aria-label="Increase quantity"
-                >
-                  <Plus className="w-5 h-5 text-gray-700 dark:text-gray-300 stroke-[3]" />
-                </button>
               </div>
-              {/* Add Button - Kiosk Optimized */}
-              <button
-                onClick={handleAddToCart}
-                className="btn-primary flex-1 min-h-[44px] min-w-0 px-3 py-2.5 flex items-center justify-center gap-1.5 text-base font-semibold transition-all active:scale-95 hover:shadow-lg"
-                aria-label={`Add ${item.name} to cart`}
-              >
-                <Plus className="w-5 h-5 stroke-[3] flex-shrink-0" />
-                <span className="truncate">{t('add')}</span>
-              </button>
-            </div>
+              
+              <h3 className="text-base font-bold text-gray-800 dark:text-gray-100 mb-1 line-clamp-2 min-h-[2.5rem]">
+                {item.name}
+              </h3>
 
-            {/* Options Indicator */}
-            {item.options && item.options.length > 0 && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center">
-                {t('customizable')}
-              </p>
-            )}
-          </div>
-        </div>
-      ) : (
-        // List View
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-row h-32 w-full">
-          {/* Item Image */}
-          <div className="relative w-32 h-full overflow-hidden flex-shrink-0">
-            <Image
-              src={item.image}
-              alt={item.name}
-              fill
-              className="object-cover group-hover:scale-110 transition-transform duration-300"
-              sizes="(max-width: 768px) 100px, 128px"
-            />
-            {/* Category Badge */}
-            <div className="absolute top-2 left-2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-2 py-0.5 rounded-full">
-              <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">
-                {t(item.category)}
-              </span>
-            </div>
-          </div>
-
-          {/* Item Details */}
-          <div className="flex flex-col justify-between p-4 flex-grow">
-            <div>
-              <div className="flex justify-between items-start">
-                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 line-clamp-1 mb-1">
-                  {item.name}
-                </h3>
-                <span className="text-lg font-bold text-primary-600 dark:text-primary-400 ml-2 flex-shrink-0">
+              {/* Price - Prominent */}
+              <div className="mb-3">
+                <span className="text-xl font-bold text-primary-600 dark:text-primary-400">
                   {formatPrice(item.price)}
                 </span>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-1 mb-2">
-                {item.description}
-              </p>
-            </div>
 
-            {/* Quantity Controls and Add Button */}
-            <div className="flex items-center gap-2 w-full mt-auto">
-              {/* Quantity Controls - Kiosk Optimized */}
-              <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-xl px-1 py-0.5 flex-shrink-0">
+              {/* Quantity Controls - Compact Horizontal */}
+              <div className="flex items-center gap-2 mb-2 bg-gray-100 dark:bg-gray-700 rounded-xl px-2 py-1.5">
                 <button
                   onClick={decrementQuantity}
-                  className="min-w-[36px] min-h-[36px] w-9 h-9 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm hover:shadow-md"
+                  className="min-w-[36px] min-h-[36px] w-9 h-9 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm"
                   aria-label="Decrease quantity"
                 >
                   <Minus className="w-4 h-4 text-gray-700 dark:text-gray-300 stroke-[3]" />
@@ -190,22 +115,206 @@ export function MenuItem({ item, viewMode = 'grid' }: MenuItemProps) {
                 </span>
                 <button
                   onClick={incrementQuantity}
-                  className="min-w-[36px] min-h-[36px] w-9 h-9 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm hover:shadow-md"
+                  className="min-w-[36px] min-h-[36px] w-9 h-9 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm"
                   aria-label="Increase quantity"
                 >
                   <Plus className="w-4 h-4 text-gray-700 dark:text-gray-300 stroke-[3]" />
                 </button>
               </div>
-              {/* Add Button - Kiosk Optimized */}
+
+              {/* Add Button - Full Width */}
               <button
                 onClick={handleAddToCart}
-                className="btn-primary flex-1 min-h-[36px] min-w-0 px-3 py-2 flex items-center justify-center gap-1.5 text-sm font-semibold transition-all active:scale-95 hover:shadow-lg"
+                className="btn-primary w-full min-h-[44px] px-4 py-2.5 flex items-center justify-center gap-1.5 text-sm font-semibold transition-all active:scale-95 hover:shadow-lg rounded-xl"
                 aria-label={`Add ${item.name} to cart`}
               >
-                <Plus className="w-4 h-4 stroke-[3] flex-shrink-0" />
+                <Plus className="w-4 h-4 stroke-[3]" />
+                <span>{t('add')}</span>
+              </button>
+
+              {/* Options Indicator */}
+              {item.options && item.options.length > 0 && (
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-2">
+                  {t('customizable')}
+                </p>
+              )}
+            </div>
+          </div>
+        ) : (
+          // Standard Grid View (2-3 columns)
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group flex flex-col h-full">
+            {/* Item Image */}
+            <div className="relative h-48 lg:h-56 overflow-hidden">
+              <Image
+                src={item.image}
+                alt={item.name}
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-300"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+              {/* Category Badge */}
+              <div className="absolute top-4 left-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-3 py-1 rounded-full">
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  {t(item.category)}
+                </span>
+              </div>
+              {/* Rating Badge */}
+              {item.rating && (
+                <div className="absolute top-4 right-4 bg-yellow-400 px-3 py-1 rounded-full flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-white text-white" />
+                  <span className="text-sm font-bold text-white">{item.rating}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Item Details */}
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2 line-clamp-1">
+                {item.name}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2 h-10">
+                {item.description}
+              </p>
+
+              {/* Price */}
+              <div className="mb-4">
+                <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+                  {formatPrice(item.price)}
+                </span>
+              </div>
+
+              {/* Quantity Controls and Add Button */}
+              <div className="flex items-center gap-2 w-full">
+                {/* Quantity Controls - Kiosk Optimized */}
+                <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-xl px-1.5 py-1 flex-shrink-0">
+                  <button
+                    onClick={decrementQuantity}
+                    className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm hover:shadow-md"
+                    aria-label="Decrease quantity"
+                  >
+                    <Minus className="w-5 h-5 text-gray-700 dark:text-gray-300 stroke-[3]" />
+                  </button>
+                  <span className="text-lg font-bold text-gray-800 dark:text-gray-100 w-8 text-center">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={incrementQuantity}
+                    className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-sm hover:shadow-md"
+                    aria-label="Increase quantity"
+                  >
+                    <Plus className="w-5 h-5 text-gray-700 dark:text-gray-300 stroke-[3]" />
+                  </button>
+                </div>
+                {/* Add Button - Kiosk Optimized */}
+                <button
+                  onClick={handleAddToCart}
+                  className="btn-primary flex-1 min-h-[44px] min-w-0 px-3 py-2.5 flex items-center justify-center gap-1.5 text-base font-semibold transition-all active:scale-95 hover:shadow-lg"
+                  aria-label={`Add ${item.name} to cart`}
+                >
+                  <Plus className="w-5 h-5 stroke-[3] flex-shrink-0" />
+                  <span className="truncate">{t('add')}</span>
+                </button>
+              </div>
+
+              {/* Options Indicator */}
+              {item.options && item.options.length > 0 && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center">
+                  {t('customizable')}
+                </p>
+              )}
+            </div>
+          </div>
+        )
+      ) : (
+        // List View - Enhanced User-Friendly Design
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 group flex flex-row h-52 w-full">
+          {/* Item Image - Larger and more prominent */}
+          <div className="relative w-52 h-full overflow-hidden flex-shrink-0">
+            <Image
+              src={item.image}
+              alt={item.name}
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-300"
+              sizes="(max-width: 768px) 180px, 208px"
+            />
+            {/* Category Badge */}
+            <div className="absolute top-4 left-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-4 py-2 rounded-full shadow-md">
+              <span className="text-sm font-bold text-gray-700 dark:text-gray-200">
+                {t(item.category)}
+              </span>
+            </div>
+            {/* Rating Badge */}
+            {item.rating && (
+              <div className="absolute bottom-4 left-4 bg-yellow-400 px-3 py-1.5 rounded-full flex items-center gap-1 shadow-md">
+                <Star className="w-4 h-4 fill-white text-white" />
+                <span className="text-sm font-bold text-white">{item.rating}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Item Details - More spacious layout */}
+          <div className="flex flex-col justify-between p-6 flex-grow min-w-0">
+            {/* Top: Title, Description and Price */}
+            <div className="flex-grow">
+              <div className="flex justify-between items-start gap-4 mb-3">
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 line-clamp-1">
+                  {item.name}
+                </h3>
+                <span className="text-2xl font-bold text-primary-600 dark:text-primary-400 flex-shrink-0">
+                  {formatPrice(item.price)}
+                </span>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 text-base leading-relaxed line-clamp-2">
+                {item.description}
+              </p>
+              {/* Options Indicator */}
+              {item.options && item.options.length > 0 && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">
+                  ✨ {t('customizable')}
+                </p>
+              )}
+            </div>
+
+            {/* Bottom: Controls - Larger and more prominent */}
+            <div className="flex items-center gap-4 w-full mt-auto">
+              {/* Quantity Controls - Larger buttons */}
+              <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-2xl px-2 py-1.5 flex-shrink-0 shadow-inner">
+                <button
+                  onClick={decrementQuantity}
+                  className="min-w-[52px] min-h-[52px] w-13 h-13 rounded-xl bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-md hover:shadow-lg"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus className="w-6 h-6 text-gray-700 dark:text-gray-300 stroke-[3]" />
+                </button>
+                <span className="text-xl font-bold text-gray-800 dark:text-gray-100 w-10 text-center">
+                  {quantity}
+                </span>
+                <button
+                  onClick={incrementQuantity}
+                  className="min-w-[52px] min-h-[52px] w-13 h-13 rounded-xl bg-white dark:bg-gray-600 hover:bg-primary-50 dark:hover:bg-gray-500 active:scale-95 flex items-center justify-center transition-all shadow-md hover:shadow-lg"
+                  aria-label="Increase quantity"
+                >
+                  <Plus className="w-6 h-6 text-gray-700 dark:text-gray-300 stroke-[3]" />
+                </button>
+              </div>
+
+              {/* Add Button - Larger and more prominent */}
+              <button
+                onClick={handleAddToCart}
+                className="btn-primary flex-1 min-h-[56px] min-w-0 px-8 py-4 flex items-center justify-center gap-3 text-xl font-bold transition-all active:scale-95 hover:shadow-xl rounded-2xl"
+                aria-label={`Add ${item.name} to cart`}
+              >
+                <Plus className="w-6 h-6 stroke-[3] flex-shrink-0" />
                 <span className="truncate">{t('add')}</span>
               </button>
             </div>
+
+            {/* Options Indicator */}
+            {item.options && item.options.length > 0 && (
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {t('customizable')}
+              </p>
+            )}
           </div>
         </div>
       )}

@@ -5,6 +5,8 @@ export type Theme = 'light' | 'dark';
 
 export type ViewMode = 'grid' | 'list';
 
+export type GridColumns = 2 | 3 | 4 | 5;
+
 export type FoodCategory = 'appetizers' | 'mains' | 'desserts';
 export type DrinkCategory = 'hot' | 'cold' | 'alcoholic';
 
@@ -119,6 +121,12 @@ export interface PaymentFormData {
   cardholderName: string;
 }
 
+// Toast Types
+export interface ToastMessage {
+  message: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+}
+
 // Context Types
 export interface KioskContextType {
   cart: CartItem[];
@@ -126,7 +134,9 @@ export interface KioskContextType {
   currentLanguage: Language;
   currentTheme: Theme;
   viewMode: ViewMode;
+  gridColumns: GridColumns;
   orderType: OrderType | null;
+  toast: ToastMessage | null;
   addToCart: (item: CartItem) => void;
   removeFromCart: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
@@ -137,6 +147,9 @@ export interface KioskContextType {
   setOrderType: (type: OrderType) => void;
   toggleTheme: () => void;
   toggleViewMode: () => void;
+  setGridColumns: (columns: GridColumns) => void;
   getOrderSummary: () => OrderSummary;
   resetKiosk: () => void;
+  showToast: (message: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
+  hideToast: () => void;
 }

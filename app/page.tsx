@@ -10,6 +10,8 @@ import { ReviewSection } from '@/components/sections/ReviewSection';
 import { PaymentSection } from '@/components/sections/PaymentSection';
 import { BackToTop } from '@/components/ui/BackToTop';
 import { FloatingCartButton } from '@/components/ui/FloatingCartButton';
+import { SwipeNavigation } from '@/components/ui/SwipeNavigation';
+import { PageIndicator } from '@/components/ui/PageIndicator';
 import { useKiosk } from '@/context/KioskContext';
 
 export default function Home() {
@@ -35,14 +37,19 @@ export default function Home() {
         {/* Header */}
         <Header />
 
-        {/* Content Area */}
-        <div className="p-6 lg:p-8 max-w-[1600px] mx-auto">
-          {currentStep === 'food' && <FoodSection />}
-          {currentStep === 'drinks' && <DrinksSection />}
-          {currentStep === 'review' && <ReviewSection />}
-          {currentStep === 'payment' && <PaymentSection />}
-        </div>
+        {/* Content Area with Swipe Navigation */}
+        <SwipeNavigation>
+          <div className="p-6 lg:p-8 max-w-[1600px] mx-auto">
+            {currentStep === 'food' && <FoodSection />}
+            {currentStep === 'drinks' && <DrinksSection />}
+            {currentStep === 'review' && <ReviewSection />}
+            {currentStep === 'payment' && <PaymentSection />}
+          </div>
+        </SwipeNavigation>
       </main>
+
+      {/* Page Indicator - Shows current page and allows quick navigation */}
+      <PageIndicator />
 
       {/* Floating Cart Button - Always Visible (Kiosk Best Practice) */}
       <FloatingCartButton />

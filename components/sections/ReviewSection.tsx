@@ -2,7 +2,6 @@
 
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
-import { NavigationButtons } from '@/components/ui/NavigationButtons';
 import { EmptyCartState } from './review/EmptyCartState';
 import { CartItemCard } from './review/CartItemCard';
 import { OrderSummaryPanel } from './review/OrderSummaryPanel';
@@ -43,11 +42,6 @@ export function ReviewSection() {
             <OrderSummaryPanel />
           </div>
         </div>
-      </div>
-
-      {/* Navigation Buttons */}
-      <div className="flex-shrink-0 px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
-        <NavigationButtons currentStep="review" />
       </div>
     </section>
   );

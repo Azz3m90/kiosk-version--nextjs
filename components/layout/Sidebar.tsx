@@ -107,9 +107,9 @@ export function Sidebar() {
         {cart.length > 0 && (
           <div className="flex-shrink-0 p-6 pt-4 border-t-2 border-gray-200 dark:border-gray-700">
             <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 rounded-xl p-5 shadow-lg border-2 border-gray-200 dark:border-gray-600 transition-colors duration-300">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">{t('orderSummary')}</h3>
-                <div className="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-300 px-3 py-1 rounded-full text-sm font-bold">
+              <div className="flex items-center justify-between mb-3 gap-2">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 flex-shrink-0">{t('orderSummary')}</h3>
+                <div className="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-300 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0">
                   {summary.itemCount} {t('items')}
                 </div>
               </div>

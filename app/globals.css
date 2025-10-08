@@ -225,6 +225,38 @@
     }
   }
 
+  /* Slow ping animation for page indicator */
+  .animate-ping-slow {
+    animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes ping-slow {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    75%, 100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+  }
+
+  /* Slide down animation for toast notifications */
+  .animate-slide-down {
+    animation: slide-down 0.3s ease-out;
+  }
+
+  @keyframes slide-down {
+    0% {
+      transform: translate(-50%, -100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  }
+
   /* Subtle bounce animation for cart badge */
   .animate-bounce-subtle {
     animation: bounce-subtle 2s ease-in-out infinite;

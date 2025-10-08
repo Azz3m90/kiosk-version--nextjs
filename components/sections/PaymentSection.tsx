@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { validateCardNumber, validateCVV } from '@/lib/utils';
-import { NavigationButtons } from '@/components/ui/NavigationButtons';
 import { PaymentSuccessMessage } from './payment/PaymentSuccessMessage';
 import { PaymentMethodSelector } from './payment/PaymentMethodSelector';
 import { CardPaymentForm } from './payment/CardPaymentForm';
@@ -123,11 +122,6 @@ export function PaymentSection() {
             />
           </div>
         </div>
-      </div>
-
-      {/* Navigation Buttons */}
-      <div className="flex-shrink-0 px-4 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
-        <NavigationButtons currentStep="payment" />
       </div>
     </section>
   );

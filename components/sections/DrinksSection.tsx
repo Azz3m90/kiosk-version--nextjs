@@ -7,8 +7,6 @@ import { useKiosk } from '@/context/KioskContext';
 import { restaurantData } from '@/data/restaurant-data';
 import { MenuItem } from '@/components/ui/MenuItem';
 import { FilterBar } from '@/components/ui/FilterBar';
-import { NavigationButtons } from '@/components/ui/NavigationButtons';
-import { ViewToggle } from '@/components/ui/ViewToggle';
 import type { DrinkItem } from '@/types';
 
 const drinkCategories = ['all', 'hot', 'cold', 'alcoholic'];
@@ -16,7 +14,55 @@ const drinkCategories = ['all', 'hot', 'cold', 'alcoholic'];
 export function DrinksSection() {
   const { t } = useTranslation();
   const { filters, updateCategory, updatePriceRange } = useFilters('drinks');
-  const { viewMode } = useKiosk();
+  const { viewMode, gridColumns } = useKiosk();
+
+  // Dynamic grid classes and item constraints based on column count
+  const getGridClass = () => {
+    switch (gridColumns) {
+      case 2:
+        return 'grid-cols-1 sm:grid-cols-2';
+      case 3:
+        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
+      case 4:
+        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
+      case 5:
+        return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5';
+      default:
+        return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
+    }
+  };
+
+  // Get item wrapper constraints for optimal sizing
+  const getItemConstraints = () => {
+    switch (gridColumns) {
+      case 2:
+        return 'max-w-md mx-auto'; // Max 448px - prevents items from being too wide
+      case 3:
+        return 'max-w-sm mx-auto'; // Max 384px - default balanced size
+      case 4:
+        return 'max-w-xs mx-auto'; // Max 320px - compact but still usable
+      case 5:
+        return ''; // No constraints for 5 columns - let grid handle sizing
+      default:
+        return 'max-w-sm mx-auto';
+    }
+  };
+
+  // Get gap size based on column count
+  const getGapClass = () => {
+    switch (gridColumns) {
+      case 2:
+        return 'gap-6'; // Spacious for 2 columns
+      case 3:
+        return 'gap-6'; // Standard spacing
+      case 4:
+        return 'gap-4'; // Tighter for 4 columns
+      case 5:
+        return 'gap-2'; // Very compact for 5 columns
+      default:
+        return 'gap-6';
+    }
+  };
 
   // Get all drink items
   const drinkItems = restaurantData.drinkItems;
@@ -50,16 +96,15 @@ export function DrinksSection() {
 
   return (
     <section className="animate-fade-in">
-      {/* Section Header */}
-      <div className="mb-8">
-        <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-3">
+      {/* Compact Section Header */}
+      <div className="mb-4">
+        <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white">
           {t('drinks_title')}
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 text-base lg:text-lg">{t('drinks_subtitle')}</p>
       </div>
 
-      {/* Filter Bar and View Toggle */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+      {/* Compact Filter Bar with Integrated View Toggle */}
+      <div className="mb-4">
         <FilterBar
           categories={drinkCategories}
           selectedCategory={filters.category}
@@ -69,16 +114,17 @@ export function DrinksSection() {
           minPrice={minPrice}
           maxPrice={maxPrice}
         />
-        <ViewToggle />
       </div>
 
       {/* Items Display - Grid or List */}
       {filteredItems.length > 0 ? (
         viewMode === 'grid' ? (
-          // Grid View
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-6">
+          // Grid View - Dynamic columns with item constraints
+          <div className={`grid ${getGridClass()} ${getGapClass()}`}>
             {filteredItems.map((item: DrinkItem) => (
-              <MenuItem key={item.id} item={item} viewMode="grid" />
+              <div key={item.id} className={`w-full ${getItemConstraints()}`}>
+                <MenuItem item={item} viewMode="grid" gridColumns={gridColumns} />
+              </div>
             ))}
           </div>
         ) : (
@@ -94,9 +140,6 @@ export function DrinksSection() {
           <p className="text-gray-500 dark:text-gray-400 text-xl">{t('no_items_found')}</p>
         </div>
       )}
-
-      {/* Navigation Buttons */}
-      <NavigationButtons currentStep="drinks" />
     </section>
   );
 }

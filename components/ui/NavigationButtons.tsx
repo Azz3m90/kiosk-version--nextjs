@@ -27,7 +27,7 @@ export function NavigationButtons({
   previousLabel,
   nextDisabled = false,
 }: NavigationButtonsProps) {
-  const { navigateToStep, cart } = useKiosk();
+  const { navigateToStep, cart, showToast } = useKiosk();
   const { t } = useTranslation();
 
   const currentIndex = stepOrder.indexOf(currentStep);
@@ -48,10 +48,13 @@ export function NavigationButtons({
       onNext();
     } else if (hasNext) {
       const nextStep = stepOrder[currentIndex + 1];
-      // Only allow navigation to review/payment if cart has items
+      
+      // Check if trying to navigate to review/payment with empty cart
       if ((nextStep === 'review' || nextStep === 'payment') && cart.length === 0) {
+        showToast(t('cart_empty_warning'), 'warning');
         return;
       }
+      
       navigateToStep(nextStep);
     }
   };

@@ -389,6 +389,7 @@ export const restaurantData: RestaurantData = {
       // Cart
       cart_empty: 'Your Cart is Empty',
       cart_empty_message: 'Add some delicious items to get started!',
+      cart_empty_warning: 'Please select at least one item before proceeding',
       start_ordering: 'Start Ordering',
       your_cart: 'Your Cart',
       proceed_to_checkout: 'Proceed to Checkout',
@@ -436,6 +437,8 @@ export const restaurantData: RestaurantData = {
       select_order_type_subtitle: 'Choose your dining preference',
       tap_to_select: 'Tap to select',
       order_type_note: 'You can change this later if needed',
+      // Navigation
+      swipe: 'Swipe',
     },
     fr: {
       food: 'Nourriture',
@@ -528,6 +531,7 @@ export const restaurantData: RestaurantData = {
       // Cart
       cart_empty: 'Votre panier est vide',
       cart_empty_message: 'Ajoutez des articles délicieux pour commencer!',
+      cart_empty_warning: 'Veuillez sélectionner au moins un article avant de continuer',
       start_ordering: 'Commencer à commander',
       your_cart: 'Votre panier',
       proceed_to_checkout: 'Procéder au paiement',
@@ -574,6 +578,8 @@ export const restaurantData: RestaurantData = {
       select_order_type_subtitle: 'Choisissez votre préférence',
       tap_to_select: 'Appuyez pour sélectionner',
       order_type_note: 'Vous pouvez modifier cela plus tard si nécessaire',
+      // Navigation
+      swipe: 'Glisser',
     },
     nl: {
       food: 'Eten',
@@ -647,6 +653,7 @@ export const restaurantData: RestaurantData = {
       // Cart
       cart_empty: 'Je winkelwagen is leeg',
       cart_empty_message: 'Voeg heerlijke items toe om te beginnen!',
+      cart_empty_warning: 'Selecteer minimaal één item voordat u doorgaat',
       start_ordering: 'Begin met bestellen',
       your_cart: 'Je winkelwagen',
       proceed_to_checkout: 'Ga naar kassa',
@@ -692,6 +699,8 @@ export const restaurantData: RestaurantData = {
       select_order_type_subtitle: 'Kies uw voorkeursoptie',
       tap_to_select: 'Tik om te selecteren',
       order_type_note: 'U kunt dit later indien nodig wijzigen',
+      // Navigation
+      swipe: 'Vegen',
     },
     de: {
       food: 'Essen',
@@ -765,6 +774,7 @@ export const restaurantData: RestaurantData = {
       // Cart
       cart_empty: 'Ihr Warenkorb ist leer',
       cart_empty_message: 'Fügen Sie leckere Artikel hinzu, um zu beginnen!',
+      cart_empty_warning: 'Bitte wählen Sie mindestens einen Artikel aus, bevor Sie fortfahren',
       start_ordering: 'Mit Bestellung beginnen',
       your_cart: 'Ihr Warenkorb',
       proceed_to_checkout: 'Zur Kasse gehen',
@@ -810,6 +820,8 @@ export const restaurantData: RestaurantData = {
       select_order_type_subtitle: 'Wählen Sie Ihre Präferenz',
       tap_to_select: 'Tippen Sie zum Auswählen',
       order_type_note: 'Sie können dies später bei Bedarf ändern',
+      // Navigation
+      swipe: 'Wischen',
     },
     es: {
       food: 'Comida',
@@ -883,6 +895,7 @@ export const restaurantData: RestaurantData = {
       // Cart
       cart_empty: 'Tu carrito está vacío',
       cart_empty_message: '¡Añade artículos deliciosos para comenzar!',
+      cart_empty_warning: 'Por favor selecciona al menos un artículo antes de continuar',
       start_ordering: 'Comenzar a pedir',
       your_cart: 'Tu carrito',
       proceed_to_checkout: 'Proceder al pago',
@@ -928,6 +941,8 @@ export const restaurantData: RestaurantData = {
       select_order_type_subtitle: 'Elige tu preferencia',
       tap_to_select: 'Toca para seleccionar',
       order_type_note: 'Puedes cambiar esto más tarde si es necesario',
+      // Navigation
+      swipe: 'Deslizar',
     },
     it: {
       food: 'Cibo',
@@ -1001,6 +1016,7 @@ export const restaurantData: RestaurantData = {
       // Cart
       cart_empty: 'Il tuo carrello è vuoto',
       cart_empty_message: 'Aggiungi articoli deliziosi per iniziare!',
+      cart_empty_warning: 'Seleziona almeno un articolo prima di procedere',
       start_ordering: 'Inizia a ordinare',
       your_cart: 'Il tuo carrello',
       proceed_to_checkout: 'Procedi al pagamento',
@@ -1046,6 +1062,8 @@ export const restaurantData: RestaurantData = {
       select_order_type_subtitle: 'Scegli la tua preferenza',
       tap_to_select: 'Tocca per selezionare',
       order_type_note: 'Puoi modificarlo più tardi se necessario',
+      // Navigation
+      swipe: 'Scorrere',
     },
   },
 };
